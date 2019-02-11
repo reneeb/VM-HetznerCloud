@@ -18,56 +18,67 @@ my $tx  = $ua->get( $url );
 my $dom = $tx->res->dom;
 
 my %resources;
-my %action_mapping = _get_action_mapping();
 
-$dom->find('div.action')->each( sub {
-    my $resource_name = $_->attr('id')    =~ s{resources-}{}r;
-    my $classes       = $_->attr('class') =~ s{action }{}r;
-    my $description   = $_->find('a.name')->first->text;
+my $current_resource;
+$dom->find('section.method')->each( sub {
+    my $description_div = $_->find('div.method__description')->first;
+    my $tmp_resource    = $description_div->find('h2')->first;
 
-    my $uri_text         = $_->find('code.uri')->first->text;
-    my ($endpoint, $uri) = $uri_text =~ m{[A-Z]+ \s+ \Q$base\E /? (\w+) (.*) \s* \z}xms;
+    if ( $tmp_resource ) {   
+        $current_resource = $tmp_resource->attr('id');
+        return;
+    }
+
+    if ( !$current_resource || $current_resource eq 'overview' ) {
+        return;
+    }
+
+    my $description = $description_div->find('h3')->first->text;
+
+    my $uri_text                  = $description_div->children('code')->first->text;
+    my ($method, $endpoint, $uri) = $uri_text =~ m{([A-Z]+) \s+ \Q$base\E /? (\w+) (.*) \s* \z}xms;
+
+    $uri //= '';
     $uri =~ s/\{\?.*\}\z//;
     $uri =~ s/\{ (\w+) \}/:$1/xg;
 
+    $endpoint =~ s{s\z}{};
     my $perl_class = join "", map { ucfirst lc $_ } split /_/, $endpoint;
-    $perl_class =~ s{s\z}{};
 
-    my %params;
-    $_->find( 'div.title' )->each( sub {
-        my $text = $_->at('strong')->text;
+    my $verb = lc $method;
+    $verb    = 'create' if $verb eq 'post';
+    $verb    = 'update' if $verb eq 'put';
 
-        return if $text eq 'Reply';
-        return if $text eq 'HTTP Request';
+    my @parts = split /\//, $uri;
 
-        $_->next->find( 'tbody tr' )->each( sub {
-            my $infos = $_->find('td')->slice( 0, 1 )->to_array;
+    my $action_name = $verb;
 
-            my $name          = $infos->[0]->at('strong')->text;
-            my ($type_string) = $infos->[1]->text =~ m{\A([\w,]+)}xms;
-            my @types         = split /,/, $type_string;
-
-            my $type = @types > 1 ? [ @types ] : $types[0];
-
-            if ( $infos->[1]->find('span.required')->size > 0 ) {
-                $params{mandatory}->{$name} = $type;
-            }
-            else {
-                $params{optional}->{$name} = $type;
-            }
-        });
-    });
-
-    my $key    = join '###', $classes, $endpoint, $uri;
-    my $method = delete $action_mapping{$key};
-
-    if ( !$method ) {
-        warn "Didn't find an action for $key";
-        $method = $resource_name;
+    my $action = pop @parts;
+    if ( !$action ) {
+        $action_name = 'list' if $method eq 'GET';
+    }
+    elsif ( $action eq 'actions' ) {
+        $action_name = 'get_actions';
+    }
+    elsif ( ':' ne substr $action, 0, 1 ) {
+        $action_name = $action;
+    }
+    elsif ( $action eq ':action_id' ) {
+        $action_name = 'get_action';
     }
 
-    $resources{$perl_class}->{$method} = {
-        type        => $classes,
+
+    my %params;
+    $_->find( 'table.table--parameters tbody tr' )->each( sub {
+         my ($name, $type, $desc) = map{ $_->text }@{ $_->find('td')->to_array };
+         
+         my ($type_name, $type_required) = split / /, $type;
+         my $man_opt = $type_required =~ m{required} ? 'required' : 'optional';
+         $params{$man_opt}->{$name} = $type_name;
+    });
+
+    $resources{$perl_class}->{$action_name} = {
+        type        => lc $method,
         uri         => $uri,
         endpoint    => $endpoint,
         description => $description,
@@ -75,9 +86,10 @@ $dom->find('div.action')->each( sub {
     };
 });
 
-
 #say Dumper( \%resources );
+
 for my $class ( keys %resources ) {
+    say "Build class $class.pm";
     my $def = $resources{$class};
 
     my $code = _get_code( $class, $def );
@@ -90,66 +102,6 @@ for my $class ( keys %resources ) {
     my $fh = IO::File->new( $path, 'w' );
     $fh->print( $code );
     $fh->close;
-}
-
-sub _get_action_mapping {
-    return (
-        'get###datacenters###/:id'                          => 'get',
-        'get###datacenters###'                              => 'list',
-        'post###ssh_keys###'                                => 'add',
-        'delete###ssh_keys###/:id'                          => 'delete',
-        'get###ssh_keys###'                                 => 'list',
-        'get###ssh_keys###/:id'                             => 'get',
-        'put###ssh_keys###/:id'                             => 'update',
-        'delete###images###/:id'                            => 'delete',
-        'get###images###/:id'                               => 'get',
-        'get###images###'                                   => 'list',
-        'put###images###/:id'                               => 'update',
-        'get###actions###'                                  => 'list',
-        'get###actions###/:id'                              => 'get',
-        'put###actions###/:id'                              => 'update',
-        'get###isos###'                                     => 'list',
-        'get###isos###/:id'                                 => 'get',
-        'post###floating_ips###'                            => 'add',
-        'delete###floating_ips###/:id'                      => 'delete',
-        'get###floating_ips###/:id'                         => 'get',
-        'put###floating_ips###/:id'                         => 'update',
-        'get###floating_ips###'                             => 'list',
-        'post###floating_ips###/:id/actions/assign'         => 'assign',
-        'get###floating_ips###/:id/actions/:action_id'      => 'get_action',
-        'post###floating_ips###/:id/actions/unassign'       => 'unassign',
-        'post###floating_ips###/:id/actions/change_dns_ptr' => 'change_dns_ptr',
-        'get###floating_ips###/:id/actions'                 => 'action_list',
-        'post###servers###'                                 => 'create',
-        'get###servers###'                                  => 'list',
-        'get###servers###/:id'                              => 'get',
-        'put###servers###/:id'                              => 'update',
-        'delete###servers###/:id'                           => 'delete',
-        'get###servers###/:id/actions'                      => 'action_list',
-        'get###servers###/:id/actions/:action_id'           => 'get_action',
-        'post###servers###/:id/actions/rebuild'             => 'rebuild',
-        'post###servers###/:id/actions/change_type'         => 'change_type',
-        'post###servers###/:id/actions/poweron'             => 'poweron',
-        'post###servers###/:id/actions/poweroff'            => 'poweroff',
-        'post###servers###/:id/actions/reboot'              => 'reboot',
-        'post###servers###/:id/actions/create_image'        => 'create_image',
-        'post###servers###/:id/actions/shutdown'            => 'shutdown',
-        'post###servers###/:id/actions/change_dns_ptr'      => 'change_dns_ptr',
-        'post###servers###/:id/actions/disable_backup'      => 'disable_backup',
-        'post###servers###/:id/actions/reset_password'      => 'reset_password',
-        'post###servers###/:id/actions/enable_backup'       => 'enable_backup',
-        'post###servers###/:id/actions/enable_rescue'       => 'enable_rescue',
-        'post###servers###/:id/actions/disable_rescue'      => 'disable_rescue',
-        'post###servers###/:id/actions/detach_iso'          => 'detach_iso',
-        'post###servers###/:id/actions/attach_iso'          => 'attach_iso',
-        'post###servers###/:id/actions/reset'               => 'reset',
-        'get###servers###/:id/metrics'                      => 'metrics',
-        'get###locations###'                                => 'list',
-        'get###locations###/:id'                            => 'get',
-        'get###server_types###'                             => 'list',
-        'get###server_types###/:id'                         => 'get',
-        'get###pricing###'                                  => 'list',
-    );
 }
 
 sub _get_code {
@@ -195,7 +147,7 @@ sub _get_code {
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
     $cloud->%s->%s(
@@ -216,7 +168,7 @@ sub _get_code {
 
     my $code = sprintf q~package VM::HetznerCloud::%s;
 
-# ABSTRACT:
+# ABSTRACT: %s
 
 use v5.10;
 
@@ -224,10 +176,11 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 %s;
 });
@@ -253,7 +206,7 @@ __END__
 
 %s
     ~,
-    $class, $dump, $endpoint, $pod;
+    $class, $class, $dump, $endpoint, $pod;
 
     return $code;
 }

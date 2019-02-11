@@ -1,6 +1,6 @@
 package VM::HetznerCloud::Pricing;
 
-# ABSTRACT:
+# ABSTRACT: Pricing
 
 use v5.10;
 
@@ -8,10 +8,11 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
   'list' => {
@@ -49,7 +50,7 @@ __END__
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
     $cloud->pricing->list(
@@ -63,7 +64,7 @@ __END__
 
 Get all prices
 
-    $cloud->pricing->list()
+    $cloud->pricing->list();
 
 
     

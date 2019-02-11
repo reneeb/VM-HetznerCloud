@@ -1,6 +1,6 @@
 package VM::HetznerCloud::ServerType;
 
-# ABSTRACT:
+# ABSTRACT: ServerType
 
 use v5.10;
 
@@ -8,14 +8,15 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
   'get' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
     },
     'type' => 'get',
@@ -39,7 +40,7 @@ around new => sub {
     my $self = $orig->( @_ );
     $self->_build(
         __PACKAGE__,
-        'server_types',
+        'server_type',
     );
 
     return $self;
@@ -59,7 +60,7 @@ __END__
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
     $cloud->server_type->get(
@@ -73,9 +74,7 @@ __END__
 
 Get a Server Type
 
-    $cloud->server_type->get(
-        id => string,     # mandatory
-    )
+    $cloud->server_type->get();
 
 
 =head2 list
@@ -84,7 +83,7 @@ Get all Server Types
 
     $cloud->server_type->list(
         name => string,     # optional
-    )
+    );
 
 
     

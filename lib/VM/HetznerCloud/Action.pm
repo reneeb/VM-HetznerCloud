@@ -1,6 +1,6 @@
 package VM::HetznerCloud::Action;
 
-# ABSTRACT:
+# ABSTRACT: Action
 
 use v5.10;
 
@@ -8,14 +8,15 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
   'get' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
     },
     'type' => 'get',
@@ -23,8 +24,8 @@ has mapping => ( is => 'ro', default => sub {
   },
   'list' => {
     'optional' => {
-      'sort' => 'string',
-      'status' => 'string'
+      'sort' => 'enum[string]',
+      'status' => 'enum[string]'
     },
     'type' => 'get',
     'uri' => ''
@@ -40,7 +41,7 @@ around new => sub {
     my $self = $orig->( @_ );
     $self->_build(
         __PACKAGE__,
-        'actions',
+        'action',
     );
 
     return $self;
@@ -60,7 +61,7 @@ __END__
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
     $cloud->action->get(
@@ -74,9 +75,7 @@ __END__
 
 Get one Action
 
-    $cloud->action->get(
-        id => string,     # mandatory
-    )
+    $cloud->action->get();
 
 
 =head2 list
@@ -84,9 +83,9 @@ Get one Action
 List all Actions
 
     $cloud->action->list(
-        sort => string,     # optional
-        status => string,     # optional
-    )
+        sort => enum[string],     # optional
+        status => enum[string],     # optional
+    );
 
 
     

@@ -1,6 +1,6 @@
 package VM::HetznerCloud::Datacenter;
 
-# ABSTRACT:
+# ABSTRACT: Datacenter
 
 use v5.10;
 
@@ -8,14 +8,15 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
   'get' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
     },
     'type' => 'get',
@@ -39,7 +40,7 @@ around new => sub {
     my $self = $orig->( @_ );
     $self->_build(
         __PACKAGE__,
-        'datacenters',
+        'datacenter',
     );
 
     return $self;
@@ -59,7 +60,7 @@ __END__
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
     $cloud->datacenter->get(
@@ -73,9 +74,7 @@ __END__
 
 Get a Datacenter
 
-    $cloud->datacenter->get(
-        id => string,     # mandatory
-    )
+    $cloud->datacenter->get();
 
 
 =head2 list
@@ -84,7 +83,7 @@ Get all Datacenters
 
     $cloud->datacenter->list(
         name => string,     # optional
-    )
+    );
 
 
     

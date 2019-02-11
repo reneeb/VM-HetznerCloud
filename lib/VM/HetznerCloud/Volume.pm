@@ -1,6 +1,6 @@
-package VM::HetznerCloud::Image;
+package VM::HetznerCloud::Volume;
 
-# ABSTRACT: Image
+# ABSTRACT: Volume
 
 use v5.10;
 
@@ -15,6 +15,13 @@ use parent 'VM::HetznerCloud::Utils';
 has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
+  'attach' => {
+    'required' => {
+      'id' => 'string'
+    },
+    'type' => 'post',
+    'uri' => '/:id/actions/attach'
+  },
   'change_protection' => {
     'required' => {
       'id' => 'string'
@@ -22,12 +29,23 @@ has mapping => ( is => 'ro', default => sub {
     'type' => 'post',
     'uri' => '/:id/actions/change_protection'
   },
+  'create' => {
+    'type' => 'post',
+    'uri' => ''
+  },
   'delete' => {
     'required' => {
       'id' => 'string'
     },
     'type' => 'delete',
     'uri' => '/:id'
+  },
+  'detach' => {
+    'required' => {
+      'id' => 'string'
+    },
+    'type' => 'post',
+    'uri' => '/:id/actions/detach'
   },
   'get' => {
     'required' => {
@@ -57,14 +75,17 @@ has mapping => ( is => 'ro', default => sub {
   },
   'list' => {
     'optional' => {
-      'bound_to' => 'string',
-      'label_selector' => 'string',
-      'name' => 'string',
-      'sort' => 'enum[string]',
-      'type' => 'enum[string]'
+      'label_selector' => 'string'
     },
     'type' => 'get',
     'uri' => ''
+  },
+  'resize' => {
+    'required' => {
+      'id' => 'string'
+    },
+    'type' => 'post',
+    'uri' => '/:id/actions/resize'
   },
   'update' => {
     'required' => {
@@ -84,7 +105,7 @@ around new => sub {
     my $self = $orig->( @_ );
     $self->_build(
         __PACKAGE__,
-        'image',
+        'volume',
     );
 
     return $self;
@@ -107,46 +128,67 @@ __END__
         token => $api_key,
     );
 
-    $cloud->image->change_protection(
+    $cloud->volume->attach(
     );
 
 =head1 METHODS
 
 
 
+=head2 attach
+
+Attach Volume to a Server
+
+    $cloud->volume->attach();
+
+
 =head2 change_protection
 
-Change protection for an Image
+Change Volume Protection
 
-    $cloud->image->change_protection();
+    $cloud->volume->change_protection();
+
+
+=head2 create
+
+Create a Volume
+
+    $cloud->volume->create();
 
 
 =head2 delete
 
-Delete an Image
+Delete a Volume
 
-    $cloud->image->delete();
+    $cloud->volume->delete();
+
+
+=head2 detach
+
+Detach Volume
+
+    $cloud->volume->detach();
 
 
 =head2 get
 
-Get an Image
+Get a Volume
 
-    $cloud->image->get();
+    $cloud->volume->get();
 
 
 =head2 get_action
 
-Get an Action for an Image
+Get an Action for a Volume
 
-    $cloud->image->get_action();
+    $cloud->volume->get_action();
 
 
 =head2 get_actions
 
-Get all Actions for an Image
+Get all Actions for a Volume
 
-    $cloud->image->get_actions(
+    $cloud->volume->get_actions(
         sort => enum[string],     # optional
         status => enum[string],     # optional
     );
@@ -154,22 +196,25 @@ Get all Actions for an Image
 
 =head2 list
 
-Get all Images
+Get all Volumes
 
-    $cloud->image->list(
-        bound_to => string,     # optional
+    $cloud->volume->list(
         label_selector => string,     # optional
-        name => string,     # optional
-        sort => enum[string],     # optional
-        type => enum[string],     # optional
     );
+
+
+=head2 resize
+
+Resize Volume
+
+    $cloud->volume->resize();
 
 
 =head2 update
 
-Update an Image
+Update a Volume
 
-    $cloud->image->update();
+    $cloud->volume->update();
 
 
     

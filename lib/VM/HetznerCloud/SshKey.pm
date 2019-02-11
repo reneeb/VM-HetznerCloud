@@ -1,6 +1,6 @@
 package VM::HetznerCloud::SshKey;
 
-# ABSTRACT:
+# ABSTRACT: SshKey
 
 use v5.10;
 
@@ -8,29 +8,26 @@ use strict;
 use warnings;
 
 use Moo;
+use Types::Mojo qw(MojoURL);
 
 use parent 'VM::HetznerCloud::Utils';
 
-has base   => ( is => 'ro', required => 1, isa => sub {} );
+has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
 has mapping => ( is => 'ro', default => sub {
 +{
-  'add' => {
-    'mandatory' => {
-      'name' => 'string',
-      'public_key' => 'string'
-    },
+  'create' => {
     'type' => 'post',
     'uri' => ''
   },
   'delete' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
     },
     'type' => 'delete',
     'uri' => '/:id'
   },
   'get' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
     },
     'type' => 'get',
@@ -38,17 +35,16 @@ has mapping => ( is => 'ro', default => sub {
   },
   'list' => {
     'optional' => {
+      'fingerprint' => 'string',
+      'label_selector' => 'string',
       'name' => 'string'
     },
     'type' => 'get',
     'uri' => ''
   },
   'update' => {
-    'mandatory' => {
+    'required' => {
       'id' => 'string'
-    },
-    'optional' => {
-      'name' => 'string'
     },
     'type' => 'put',
     'uri' => '/:id'
@@ -64,7 +60,7 @@ around new => sub {
     my $self = $orig->( @_ );
     $self->_build(
         __PACKAGE__,
-        'ssh_keys',
+        'ssh_key',
     );
 
     return $self;
@@ -84,61 +80,53 @@ __END__
 
     my $api_key = '1234abc';
     my $cloud   = VM::HetznerCloud->new(
-        api_key => $api_key,
+        token => $api_key,
     );
 
-    $cloud->ssh_key->add(
+    $cloud->ssh_key->create(
     );
 
 =head1 METHODS
 
 
 
-=head2 add
+=head2 create
 
-Create a SSH Key
+Create an SSH key
 
-    $cloud->ssh_key->add(
-        name => string,     # mandatory
-        public_key => string,     # mandatory
-    )
+    $cloud->ssh_key->create();
 
 
 =head2 delete
 
-Delete a SSH Key
+Delete an SSH key
 
-    $cloud->ssh_key->delete(
-        id => string,     # mandatory
-    )
+    $cloud->ssh_key->delete();
 
 
 =head2 get
 
-Get a SSH Key
+Get an SSH key
 
-    $cloud->ssh_key->get(
-        id => string,     # mandatory
-    )
+    $cloud->ssh_key->get();
 
 
 =head2 list
 
-Get all SSH Keys
+Get all SSH keys
 
     $cloud->ssh_key->list(
+        fingerprint => string,     # optional
+        label_selector => string,     # optional
         name => string,     # optional
-    )
+    );
 
 
 =head2 update
 
-Change the name of a SSH Key
+Update an SSH key
 
-    $cloud->ssh_key->update(
-        id => string,     # mandatory
-        name => string,     # optional
-    )
+    $cloud->ssh_key->update();
 
 
     
