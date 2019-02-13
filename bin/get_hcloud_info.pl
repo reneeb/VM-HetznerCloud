@@ -1,11 +1,15 @@
 #!/usr/bin/env perl
 
+# PODNAME: get_hcloud_info.pl
+# ABSTRACT: get API definitions from docs.hetzner.cloud
+
 use v5.20;
 
 use strict;
 use warnings;
 
 use Mojo::UserAgent;
+use Mojo::Util qw(dumper);
 use Data::Dumper;
 use File::Basename;
 use File::Spec;
@@ -69,13 +73,9 @@ $dom->find('section.method')->each( sub {
 
 
     my %params;
-    $_->find( 'table.table--parameters tbody tr' )->each( sub {
-         my ($name, $type, $desc) = map{ $_->text }@{ $_->find('td')->to_array };
-         
-         my ($type_name, $type_required) = split / /, $type;
-         my $man_opt = $type_required =~ m{required} ? 'required' : 'optional';
-         $params{$man_opt}->{$name} = $type_name;
-    });
+    for my $header ( 'URI Parameters', 'Request' ) {
+        _get_parameters( $header, $_, \%params );
+    }
 
     $resources{$perl_class}->{$action_name} = {
         type        => lc $method,
@@ -95,13 +95,37 @@ for my $class ( keys %resources ) {
     my $code = _get_code( $class, $def );
     my $path = File::Spec->catfile(
         dirname( __FILE__ ),
-        qw/.. lib VM HetznerCloud/,
+        qw/.. lib VM HetznerCloud API/,
         "$class.pm"
     );
 
     my $fh = IO::File->new( $path, 'w' );
     $fh->print( $code );
     $fh->close;
+}
+
+sub _get_parameters {
+    my ($header, $object, $params) = @_;
+
+    my $head_node = $object->find( 'h4')->grep( sub {
+        $_->text eq $header;
+    })->first;
+
+    return if !$head_node;
+
+    my $table = $head_node->following('div.table-wrapper')->first;
+
+    return if !$table;
+
+    $table->find('table tbody tr')->each( sub {
+         my ($name, $type, $desc) = map{ $_->text }@{ $_->find('td')->to_array };
+
+         my ($type_name, $type_required) = $type =~ m{\A\s* (.*?) (?:\s \((required|optional)\) \s* )? \z}x;
+         my $man_opt   = $type_required =~ m{required} ? 'required' : 'optional';
+         my @types     = split /\s*,\s*/, $type_name;
+         my $type_info = @types > 1 ? [ @types ] : $types[0];
+         $params->{$man_opt}->{$name} = $type_info;
+    });
 }
 
 sub _get_code {
@@ -111,6 +135,7 @@ sub _get_code {
     my $endpoint    = '';
     my $method_name = '';
     my $obj_method  = '';
+    my $subs        = '';
 
     for my $method ( sort keys %{ $definitions } ) {
         $endpoint       = delete $definitions->{$method}->{endpoint};
@@ -118,15 +143,22 @@ sub _get_code {
         $obj_method     = $endpoint =~ s{s\z}{}r;
         $method_name  ||= $method;
 
-        my $params = '';
-        for my $type ( qw/mandatory optional/ ) {
+        my $params = '{';
+
+        TYPE:
+        for my $type ( qw/required optional/ ) {
+
+            next TYPE if !exists $definitions->{$method}->{$type};
+
             my $type_param = $definitions->{$method}->{$type} || {};
+            my $method     = $type eq 'required' ? '->required' : '';
+
             for my $param ( sort keys %{ $type_param } ) {
-                $params .= sprintf "\n        %s => %s,     # %s", $param, $type_param->{$param}, $type;
+                $params .= sprintf "\n        '%s' => joi%s->%s,", $param, $method, $type_param->{$param};
             }
         }
 
-        $params .= "\n    " if $params;
+        $params .= "\n    };\n";
 
         $methods_pod .= sprintf q~
 
@@ -137,6 +169,32 @@ sub _get_code {
     $cloud->%s->%s(%s);
 ~,
         $method, $description, $obj_method, $method, $params;
+
+        $subs .= sprintf q~
+sub %s ($self, %%params) {
+    my $spec   = %s
+    my @errors = joi(
+        \%%params,
+        joi->object->props( $spec ),
+    );
+
+    if ( @errors ) {
+        croak 'invalid parameters';
+    }
+
+    my %%request_params = map{
+        exists $params{$_} ?
+            ($_ => $params{$_}) :
+            ();
+    } keys %%{$spec},
+
+    $self->request(
+        '%s',
+        '%s',
+        \%%request_params
+    );
+}
+~, $method, $params, $definitions->{$method}->{type}, $definitions->{$method}->{uri};
     }
 
     my $pod = sprintf q~
@@ -153,20 +211,21 @@ sub _get_code {
     $cloud->%s->%s(
     );
 
+=head1 ATTRIBUTES
+
+=over 4
+
+=item * endpoint
+
+=back
+
 =head1 METHODS
 
 %s
 ~,
     $obj_method, $method_name, $methods_pod;
 
-    local $Data::Dumper::Sortkeys = 1;
-    local $Data::Dumper::Indent   = 1;
-
-    my $dump = Dumper( $definitions );
-    $dump    =~ s{\$VAR1 \s+ = \s+}{+}xms;
-
-
-    my $code = sprintf q~package VM::HetznerCloud::%s;
+    my $code = sprintf q~package VM::HetznerCloud::API::%s;
 
 # ABSTRACT: %s
 
@@ -176,27 +235,21 @@ use strict;
 use warnings;
 
 use Moo;
-use Types::Mojo qw(MojoURL);
+use Types::Standard qw(:all);
 
-use parent 'VM::HetznerCloud::Utils';
+use Mojo::Base -strict, -signatures;
 
-has base   => ( is => 'ro', required => 1, isa => MojoURL["https?"] );
-has mapping => ( is => 'ro', default => sub {
-%s;
-});
+use parent 'VM::HetznerCloud';;
 
-around new => sub {
-    my $orig  = shift;
-    my $class = shift;
+with 'VM::HetznerCloud::Utils';
+with 'MooX::Singleton';
 
-    my $self = $orig->( @_ );
-    $self->_build(
-        __PACKAGE__,
-        '%s',
-    );
+use JSON::Validator qw(joi);
+use Carp;
 
-    return $self;
-};
+has endpoint  => ( is => 'ro', isa => Str, default => sub { '%s' } );
+
+%s
 
 1;
 
@@ -206,7 +259,7 @@ __END__
 
 %s
     ~,
-    $class, $class, $dump, $endpoint, $pod;
+    $class, $class, $endpoint, $subs, $pod;
 
     return $code;
 }

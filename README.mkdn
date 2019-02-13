@@ -1,0 +1,82 @@
+[![Build Status](https://travis-ci.org/reneeb/VM-HetznerCloud.svg?branch=master)](https://travis-ci.org/reneeb/VM-HetznerCloud)
+[![Kwalitee status](http://cpants.cpanauthors.org/dist/VM-HetznerCloud.png)](http://cpants.charsbar.org/dist/overview/VM-HetznerCloud)
+[![GitHub issues](https://img.shields.io/github/issues/reneeb/VM-HetznerCloud.svg)](https://github.com/reneeb/VM-HetznerCloud/issues)
+
+# NAME
+
+VM::HetznerCloud - Perl library to work with the API for the Hetzner Cloud
+
+# VERSION
+
+version 0.01
+
+# SYNOPSIS
+
+# ATTRIBUTES
+
+- base\_uri
+- client 
+- host
+- token
+
+# METHODS
+
+## request
+
+
+
+# Development
+
+The distribution is contained in a Git repository, so simply clone the
+repository
+
+```
+$ git clone git://github.com/reneeb/VM-HetznerCloud.git
+```
+
+and change into the newly-created directory.
+
+```
+$ cd VM-HetznerCloud
+```
+
+The project uses [`Dist::Zilla`](https://metacpan.org/pod/Dist::Zilla) to
+build the distribution, hence this will need to be installed before
+continuing:
+
+```
+$ cpanm Dist::Zilla
+```
+
+To install the required prequisite packages, run the following set of
+commands:
+
+```
+$ dzil authordeps --missing | cpanm
+$ dzil listdeps --author --missing | cpanm
+```
+
+The distribution can be tested like so:
+
+```
+$ dzil test
+```
+
+To run the full set of tests (including author and release-process tests),
+add the `--author` and `--release` options:
+
+```
+$ dzil test --author --release
+```
+
+# AUTHOR
+
+Renee Baecker <reneeb@cpan.org>
+
+# COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2018 by Renee Baecker.
+
+This is free software, licensed under:
+
+    The Artistic License 2.0 (GPL Compatible)

@@ -12,10 +12,14 @@ my $cloud = VM::HetznerCloud->new(
 );
 
 isa_ok $cloud, 'VM::HetznerCloud';
-can_ok $cloud, qw/request token base_uri version server client/;
+can_ok $cloud, qw/request token base_uri host client/;
 
 my $client = $cloud->client;
-isa_ok $client, 'REST::Client';
+isa_ok $client, 'Mojo::UserAgent';
+
+is $cloud->base_uri, 'v1';
+is $cloud->token, 'abc123';
+is $cloud->host, 'https://api.hetzner.cloud';
 
 # do some fake requests
 
