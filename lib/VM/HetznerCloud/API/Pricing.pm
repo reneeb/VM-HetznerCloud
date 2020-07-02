@@ -2,7 +2,7 @@ package VM::HetznerCloud::API::Pricing;
 
 # ABSTRACT: Pricing
 
-use v5.10;
+use v5.20;
 
 use strict;
 use warnings;
@@ -12,24 +12,28 @@ use Types::Standard qw(:all);
 
 use Mojo::Base -strict, -signatures;
 
-use parent 'VM::HetznerCloud';;
+extends 'VM::HetznerCloud';
 
 with 'VM::HetznerCloud::Utils';
 with 'MooX::Singleton';
 
-use JSON::Validator qw(joi);
+use JSON::Validator;
 use Carp;
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'pricing' } );
 
-
 sub list ($self, %params) {
     my $spec   = {
+        type       => "object",
+        required   => [qw//],
+        properties => {
+        },
     };
 
-    my @errors = joi(
+    my $validator = JSON::Validator->new->schema($spec);
+
+    my @errors = $validator->validate(
         \%params,
-        joi->object->props( $spec ),
     );
 
     if ( @errors ) {
@@ -40,12 +44,12 @@ sub list ($self, %params) {
         exists $params{$_} ?
             ($_ => $params{$_}) :
             ();
-    } keys %{$spec},
+    } keys %{$spec->{properties}};
 
     $self->request(
-        'get',
         '',
-        \%request_params
+        { type => 'get' },
+        \%request_params,
     );
 }
 
@@ -87,6 +91,10 @@ __END__
 Get all prices
 
     $cloud->pricing->list({
+        type       => "object",
+        required   => [qw//],
+        properties => {
+        },
     };
 );
 

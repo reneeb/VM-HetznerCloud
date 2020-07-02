@@ -22,8 +22,13 @@ sub load_namespace ($package) {
 
         no strict 'refs';
         *{ $package . '::' . decamelize( $base ) } = sub ($cloud) {
-            $module->instance(
+            my $object = $module->instance(
+                token    => $cloud->token,
+                base_uri => $cloud->base_uri,
+                client   => $cloud->client,
             );
+
+            return $object;
         };
     });
 }

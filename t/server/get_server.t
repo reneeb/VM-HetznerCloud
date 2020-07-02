@@ -7,15 +7,24 @@ use Test::More;
 
 use VM::HetznerCloud;
 
+use Data::Printer;
+
 my $cloud = VM::HetznerCloud->new(
-    token => 'abc123',
+    token => $ENV{HETZNER_CLOUD_TOKEN} // 'abc123',
 );
 
-my $client = $cloud->server;
-isa_ok $client, 'VM::HetznerCloud::Server';
+my $client = $cloud->servers;
+isa_ok $client, 'VM::HetznerCloud::API::Servers';
 
-my $server = $client->get();
-my $server = $client->list();
+is $client->token, $ENV{HETZNER_CLOUD_TOKEN} // 'abc123';
+is $client->token, $cloud->token;
+is $client->host, $cloud->host;
+is $client->base_uri, $cloud->base_uri;
 
+my $server = $client->get( id => "3944327" );
+my $server_list = $client->list();
+
+print np $server;
+print np $server_list;
 
 done_testing();

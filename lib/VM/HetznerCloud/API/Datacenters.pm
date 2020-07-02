@@ -1,8 +1,8 @@
-package VM::HetznerCloud::API::Datacenter;
+package VM::HetznerCloud::API::Datacenters;
 
-# ABSTRACT: Datacenter
+# ABSTRACT: Datacenters
 
-use v5.10;
+use v5.20;
 
 use strict;
 use warnings;
@@ -12,25 +12,29 @@ use Types::Standard qw(:all);
 
 use Mojo::Base -strict, -signatures;
 
-use parent 'VM::HetznerCloud';;
+extends 'VM::HetznerCloud';
 
 with 'VM::HetznerCloud::Utils';
 with 'MooX::Singleton';
 
-use JSON::Validator qw(joi);
+use JSON::Validator;
 use Carp;
 
-has endpoint  => ( is => 'ro', isa => Str, default => sub { 'datacenter' } );
-
+has endpoint  => ( is => 'ro', isa => Str, default => sub { 'datacenters' } );
 
 sub get ($self, %params) {
     my $spec   = {
-        'id' => joi->required->string,
+        type       => "object",
+        required   => [qw/id/],
+        properties => {
+            'id' => { type => "string" },
+        },
     };
 
-    my @errors = joi(
+    my $validator = JSON::Validator->new->schema($spec);
+
+    my @errors = $validator->validate(
         \%params,
-        joi->object->props( $spec ),
     );
 
     if ( @errors ) {
@@ -41,23 +45,28 @@ sub get ($self, %params) {
         exists $params{$_} ?
             ($_ => $params{$_}) :
             ();
-    } keys %{$spec},
+    } keys %{$spec->{properties}};
 
     $self->request(
-        'get',
         '/:id',
-        \%request_params
+        { type => 'get' },
+        \%request_params,
     );
 }
 
 sub list ($self, %params) {
     my $spec   = {
-        'name' => joi->string,
+        type       => "object",
+        required   => [qw//],
+        properties => {
+            'name' => { type => "string" },
+        },
     };
 
-    my @errors = joi(
+    my $validator = JSON::Validator->new->schema($spec);
+
+    my @errors = $validator->validate(
         \%params,
-        joi->object->props( $spec ),
     );
 
     if ( @errors ) {
@@ -68,12 +77,12 @@ sub list ($self, %params) {
         exists $params{$_} ?
             ($_ => $params{$_}) :
             ();
-    } keys %{$spec},
+    } keys %{$spec->{properties}};
 
     $self->request(
-        'get',
         '',
-        \%request_params
+        { type => 'get' },
+        \%request_params,
     );
 }
 
@@ -115,7 +124,11 @@ __END__
 Get a Datacenter
 
     $cloud->datacenter->get({
-        'id' => joi->required->string,
+        type       => "object",
+        required   => [qw/id/],
+        properties => {
+            'id' => { type => "string" },
+        },
     };
 );
 
@@ -125,7 +138,11 @@ Get a Datacenter
 Get all Datacenters
 
     $cloud->datacenter->list({
-        'name' => joi->string,
+        type       => "object",
+        required   => [qw//],
+        properties => {
+            'name' => { type => "string" },
+        },
     };
 );
 

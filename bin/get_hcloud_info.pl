@@ -45,8 +45,9 @@ $dom->find('section.method')->each( sub {
     $uri //= '';
     $uri =~ s/\{\?.*\}\z//;
     $uri =~ s/\{ (\w+) \}/:$1/xg;
+    $uri =~ s{^/}{};
 
-    $endpoint =~ s{s\z}{};
+    #$endpoint =~ s{s\z}{};
     my $perl_class = join "", map { ucfirst lc $_ } split /_/, $endpoint;
 
     my $verb = lc $method;
@@ -143,7 +144,12 @@ sub _get_code {
         $obj_method     = $endpoint =~ s{s\z}{}r;
         $method_name  ||= $method;
 
-        my $params = '{';
+        my @required = sort keys %{ $definitions->{$method}->{required} || {} };
+        my $params = qq~{
+        type       => "object",
+        required   => [qw/@required/],
+        properties => {~;
+
 
         TYPE:
         for my $type ( qw/required optional/ ) {
@@ -151,14 +157,13 @@ sub _get_code {
             next TYPE if !exists $definitions->{$method}->{$type};
 
             my $type_param = $definitions->{$method}->{$type} || {};
-            my $method     = $type eq 'required' ? '->required' : '';
 
             for my $param ( sort keys %{ $type_param } ) {
-                $params .= sprintf "\n        '%s' => joi%s->%s,", $param, $method, $type_param->{$param};
+                $params .= sprintf qq~\n            '%s' => { type => "%s" },~, $param, $type_param->{$param};
             }
         }
 
-        $params .= "\n    };\n";
+        $params .= "\n        },\n    };\n";
 
         $methods_pod .= sprintf q~
 
@@ -173,9 +178,10 @@ sub _get_code {
         $subs .= sprintf q~
 sub %s ($self, %%params) {
     my $spec   = %s
-    my @errors = joi(
+    my $validator = JSON::Validator->new->schema($spec);
+
+    my @errors = $validator->validate(
         \%%params,
-        joi->object->props( $spec ),
     );
 
     if ( @errors ) {
@@ -186,15 +192,15 @@ sub %s ($self, %%params) {
         exists $params{$_} ?
             ($_ => $params{$_}) :
             ();
-    } keys %%{$spec},
+    } keys %%{$spec->{properties}};
 
     $self->request(
         '%s',
-        '%s',
-        \%%request_params
+        { type => '%s' },
+        \%%request_params,
     );
 }
-~, $method, $params, $definitions->{$method}->{type}, $definitions->{$method}->{uri};
+~, $method, $params, $definitions->{$method}->{uri}, $definitions->{$method}->{type};
     }
 
     my $pod = sprintf q~
@@ -229,7 +235,7 @@ sub %s ($self, %%params) {
 
 # ABSTRACT: %s
 
-use v5.10;
+use v5.20;
 
 use strict;
 use warnings;
@@ -239,16 +245,15 @@ use Types::Standard qw(:all);
 
 use Mojo::Base -strict, -signatures;
 
-use parent 'VM::HetznerCloud';;
+extends 'VM::HetznerCloud';
 
 with 'VM::HetznerCloud::Utils';
 with 'MooX::Singleton';
 
-use JSON::Validator qw(joi);
+use JSON::Validator;
 use Carp;
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { '%s' } );
-
 %s
 
 1;

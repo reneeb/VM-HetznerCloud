@@ -18,7 +18,7 @@ sub _check_params ($self, $rules, %params ) {
         if ( !exists $params{$mandatory} ) {
             croak sprintf 'The field %s is mandatory!', $mandatory;
         }
-        elsif ( ! $self->_check_type( $params->{$mandatory}, $format ) ) {
+        elsif ( ! $self->_check_type( $params{$mandatory}, $format ) ) {
             croak sprintf 'Wrong format for %s. Expected format: %s',
                 $mandatory, $format;
         }
@@ -27,6 +27,7 @@ sub _check_params ($self, $rules, %params ) {
     }
 
     my $opt_rules = $rules->{optional} || {};
+    my %errors;
 
     OPTIONAL:
     for my $optional ( sort keys %{ $opt_rules } ) {
@@ -35,12 +36,12 @@ sub _check_params ($self, $rules, %params ) {
         if ( !exists $params{$optional} ) {
             next OPTIONAL;
         }
-        elsif ( ! $self->_check_type( $params->{$optional}, $format ) ) {
+        elsif ( ! $self->_check_type( $params{$optional}, $format ) ) {
             $errors{$optional} = 'Wrong format. Expected format: ' . $format;
             next OPTIONAL;
         }
 
-        $req_params{$optional} = $params->{$optional};
+        $req_params{$optional} = $params{$optional};
     }
 
     return \%req_params;

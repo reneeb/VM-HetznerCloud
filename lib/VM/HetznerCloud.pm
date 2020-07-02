@@ -14,6 +14,9 @@ use Mojo::Base -strict, -signatures;
 
 with 'VM::HetznerCloud::API';
 
+use feature 'postderef';
+no warnings 'experimental::postderef';
+
 our $VERSION = 0.01;
 
 has token    => ( is => 'ro', isa => Str, required => 1 );
@@ -31,33 +34,52 @@ has client   => (
 
 __PACKAGE__->load_namespace;
 
-sub request ($self, $partial_uri, %opts) {
-    my $method = lc $opts{type} // 'get';
-    my $sub    = $self->client->can($method);
+sub request ( $self, $partial_uri, $opts, $params = {} ) {
 
-    #$path =~ s{:(\w+)\b}{ delete $params->{$mandatory} }xmsge;
-#    my $body  = JSON->new->utf8(1)->encode( \%req_params );
-#    my $query = join '&', map{ $_ . '=' . uri_escape($req_params{$_}) }sort keys %req_params;
-
-#    $path .= '?' . $query if $query;
-
+    my $method = delete $opts->{type} // 'get';
+    my $sub    = $self->client->can(lc $method);
 
     if ( !$sub ) {
-        croak "Unsupported request method $method";
+        croak sprintf 'Invalid request method %s', $method;
     }
 
-    my $uri = sprintf "%s/%s", $self->base_uri, $partial_uri;
+    $partial_uri =~ s{:(?<mandatory>\w+)\b}{ delete $params->{$+{mandatory}} }xmsge;
+
+    my %request_opts;
+    if ( $params->%* ) {
+        %request_opts = ( json => $params );
+    }
+
+    $opts->{query} //= {};
+    my $query = '';
+    if ( $opts->{query}->%* ) {
+        my $query_params = delete $opts->{query};
+
+        $query = join '&', map{ 
+            $_ . '=' . uri_escape($query_params->{$_}) 
+        }sort keys $query_params->%*;
+    }
+
+    $partial_uri .= '?' . $query if $query;
+
+    my $uri = join '/', 
+        $self->host, 
+        $self->base_uri,
+        $self->endpoint,
+        $partial_uri;
 
     my $tx = $self->client->$method(
         $uri,
         {
             Authorization => 'Bearer ' . $self->token,
         },
-        delete $opts{body},
-        \%opts,
+        %request_opts,
     );
 
     my $response = $tx->res;
+
+    say STDERR $tx->req->to_string if $ENV{VM_HETZNERCLOUD_DEBUG};
+    say STDERR $tx->res->to_string if $ENV{VM_HETZNERCLOUD_DEBUG};
 
     return if $response->is_error;
     return $response->json;
@@ -67,17 +89,35 @@ sub request ($self, $partial_uri, %opts) {
 
 =head1 SYNOPSIS
 
+    use VM::HetznerCloud;
+
+    my $cloud = VM::HetznerCloud->new(
+        token => 'ABCDEFG1234567',    # your api token
+    );
+
+    my $server_client = $cloud->server;
+    my $server_list   = $server_client->list;
+
 =head1 ATTRIBUTES
 
 =over 4
 
 =item * base_uri
 
+I<(optional)> Default: v1
+
 =item * client 
+
+I<(optional)> A C<Mojo::UserAgent> compatible user agent. By default a new object of C<Mojo::UserAgent>
+is created.
 
 =item * host
 
+I<(optional)> This is the URL to Hetzner's Cloud-API. Defaults to C<https://api.hetzner.cloud>
+
 =item * token
+
+B<I<(required)>> Your API token.
 
 =back
 

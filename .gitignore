@@ -1,4 +1,4 @@
 *.sw*
 VM-HetznerCloud-*
-.build/*
-
+/.build*
+/.vscode*
