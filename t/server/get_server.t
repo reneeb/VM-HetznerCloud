@@ -24,7 +24,7 @@ is $client->base_uri, $cloud->base_uri;
 my $server = $client->get( id => "3944327" );
 my $server_list = $client->list();
 
-print np $server;
-print np $server_list;
+#print np $server;
+#print np $server_list;
 
 done_testing();

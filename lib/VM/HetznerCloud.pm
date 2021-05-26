@@ -5,6 +5,7 @@ use v5.20;
 # ABSTRACT: Perl library to work with the API for the Hetzner Cloud
 
 use Moo;
+use Types::Standard qw(:all);
 use Mojo::UserAgent;
 
 use Carp;
