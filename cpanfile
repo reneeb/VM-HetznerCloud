@@ -23,6 +23,7 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
+    requires "JSON::XS" => "0";
     requires "Pod::Coverage::TrustPod" => "0";
     requires "Test::BOM" => "0";
     requires "Test::More" => "0.88";
