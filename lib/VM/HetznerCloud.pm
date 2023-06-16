@@ -8,16 +8,17 @@ use Moo;
 use Mojo::UserAgent;
 
 use Carp;
+use Types::Standard qw(Str);
 use Types::Mojo qw(:all);
 
 use Mojo::Base -strict, -signatures;
+use Mojo::Loader qw(find_modules load_class);
+use Mojo::UserAgent;
+use Mojo::Util qw(decamelize);
 
-with 'VM::HetznerCloud::API';
+use experimental 'postderef';
 
-use feature 'postderef';
-no warnings 'experimental::postderef';
-
-our $VERSION = 0.01;
+# VERSION
 
 has token    => ( is => 'ro', isa => Str, required => 1 );
 has host     => ( is => 'ro', isa => MojoURL["https?"], default => sub { 'https://api.hetzner.cloud' }, coerce => 1 );
@@ -32,57 +33,29 @@ has client   => (
     }
 );
 
-__PACKAGE__->load_namespace;
+__PACKAGE__->_load_namespace;
 
-sub request ( $self, $partial_uri, $opts, $params = {} ) {
+sub _load_namespace ($package) {
+    my @modules = find_modules $package . '::API', { recursive => 1 };
 
-    my $method = delete $opts->{type} // 'get';
-    my $sub    = $self->client->can(lc $method);
+    for my $module ( @modules ) {
+        load_class( $module );
 
-    if ( !$sub ) {
-        croak sprintf 'Invalid request method %s', $method;
+        my $base = (split /::/, $module)[-1];
+
+        no strict 'refs';  ## no critic
+        *{ $package . '::' . decamelize( $base ) } = sub ($api) {
+            state $object = $module->instance(
+                token    => $api->token,
+                base_uri => $api->base_uri,
+                client   => $api->client,
+            );
+
+            return $object;
+        };
     }
 
-    $partial_uri =~ s{:(?<mandatory>\w+)\b}{ delete $params->{$+{mandatory}} }xmsge;
-
-    my %request_opts;
-    if ( $params->%* ) {
-        %request_opts = ( json => $params );
-    }
-
-    $opts->{query} //= {};
-    my $query = '';
-    if ( $opts->{query}->%* ) {
-        my $query_params = delete $opts->{query};
-
-        $query = join '&', map{ 
-            $_ . '=' . uri_escape($query_params->{$_}) 
-        }sort keys $query_params->%*;
-    }
-
-    $partial_uri .= '?' . $query if $query;
-
-    my $uri = join '/', 
-        $self->host, 
-        $self->base_uri,
-        $self->endpoint,
-        $partial_uri;
-
-    my $tx = $self->client->$method(
-        $uri,
-        {
-            Authorization => 'Bearer ' . $self->token,
-        },
-        %request_opts,
-    );
-
-    my $response = $tx->res;
-
-    say STDERR $tx->req->to_string if $ENV{VM_HETZNERCLOUD_DEBUG};
-    say STDERR $tx->res->to_string if $ENV{VM_HETZNERCLOUD_DEBUG};
-
-    return if $response->is_error;
-    return $response->json;
+    return 1;
 }
 
 1;
@@ -123,4 +96,39 @@ B<I<(required)>> Your API token.
 
 =head1 METHODS
 
-=head2 request
+=head2 actions
+
+=head2 certificates
+
+=head2 datacenters
+
+=head2 firewalls
+
+=head2 floating_ips
+
+=head2 images
+
+=head2 isos
+
+=head2 load_balancer_types
+
+=head2 load_balancers
+
+=head2 locations
+
+=head2 networks
+
+=head2 placement_groups
+
+=head2 pricing
+
+=head2 primary_ips
+
+=head2 server_types
+
+=head2 servers
+
+=head2 ssh_keys
+
+=head2 volumes
+
