@@ -31,7 +31,7 @@ my $url  = 'https://docs.hetzner.cloud';
 
 my $tx        = $ua->get( $url );
 my $dom       = $tx->res->dom;
-my $scripts = $dom->find('script#__NEXT_DATA__')->first;
+my $scripts   = $dom->find('script#__NEXT_DATA__')->first;
 
 my $api_json = decode_json( encode_utf8 $scripts->content )->{props}->{pageProps}->{api}->{paths};
 
@@ -68,7 +68,7 @@ for my $api_path ( @paths ) {
     push $classes{$class}->{defs}->@*, $subtree;
 }
 
-for my $class ( keys %classes ) {
+for my $class ( sort keys %classes ) {
     say "Build class $class.pm";
     my $def = $classes{$class};
 
@@ -82,6 +82,43 @@ for my $class ( keys %classes ) {
     my $fh = $path->open('>');
     $fh->print( $code );
     $fh->close;
+    #last;
+}
+
+sub _get_subnmame ( $parts, $method ) {
+    my $all          = ( $parts->@* && $parts->[-1] =~ m{\{} ) ? 0 : 1;
+    my @static_parts = grep { $_ !~ m/\{/ } $parts->@*;
+
+    my $suffix = @static_parts ? ( join '_', '', @static_parts ) : '';
+
+    if ( $all ) {
+        return 'list' . $suffix   if $method eq 'get';
+        return 'create' . $suffix if $method eq 'post';
+    }
+
+    return $method . $suffix;
+}
+
+sub _get_subparams ( $def ) {
+    my $params = $def->{parameters} || [];
+
+    my %subparams;
+    for my $param ( $params->@* ) {
+        my $name = $param->{name};
+
+        my $validate = 'string';
+        if ( $param->{schema} ) {
+            $validate = $param->{schema}->{format} || $param->{schema}->{type};
+        }
+
+        $subparams{$name} = {
+            in       => $param->{in},
+            validate => $validate,
+            required => $param->{required} + 0,
+        };
+    }
+
+    return \%subparams;
 }
 
 sub _get_code ($class, $definitions) {
@@ -99,12 +136,14 @@ sub _get_code ($class, $definitions) {
 
             next METHOD if 'HASH' ne ref $method_def;
 
-            my $operation_id = delete $method_def->{operationId};
+            my $subname   = _get_subnmame( $subdef->{parts}, $method );
+            my $subparams = _get_subparams( $method_def );
+
             delete @{ $method_def }{qw/responses x-code-samples summary tags/};
         
             my $description = delete $method_def->{description};
-            my ($sub, $method_name) = _get_sub( $operation_id, $method, $endpoint, $uri );
-            my $pod                 = _get_pod( $method_name, $description, $class, $endpoint );
+            my $sub = _get_sub( $subname, $method, $endpoint, $uri, $subparams );
+            my $pod = _get_pod( $subname, $description, $class, $endpoint, $subparams );
 
             $subs        .= $sub;
             $methods_pod .= $pod;
@@ -156,8 +195,6 @@ extends 'VM::HetznerCloud::APIBase';
 
 with 'MooX::Singleton';
 
-use VM::HetznerCloud::Schema;
-
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { '%s' } );
@@ -176,24 +213,38 @@ __END__
     return $code;
 }
 
-sub _get_sub ( $operation_id, $method, $class, $uri ) {
-    my $method_name = decamelize $operation_id;
-
-    $method_name = 'list' if $method_name eq 'get_' . $class;
-    
+sub _get_sub ( $method_name, $method, $class, $uri, $params ) {
     $class =~ s{s\z}{};
-    $method_name =~ s{_${class}s?}{};
+
+    my $dump = '{}';
+    if ( $params->%* ) {
+        $dump = Data::Dumper::Perltidy::Dumper( $params );
+        $dump =~ s{^}{    }xmsg;
+        #$dump =~ s{\};\s*\z}{    \}};
+        $dump =~ s{\A        }{}xms;
+        $dump =~ s{\s*\$VAR1\s*=\s*}{};
+    }
 
     my $sub = sprintf q~
 sub %s ($self, %%params) {
-    return $self->_do( '%s', \%%params, '%s', { type => '%s' } );
+    my $request_params = %s;
+    return $self->_request( '%s', \%%params, $request_params, { type => '%s' } );
 }
-~, $method_name, $operation_id, $uri, $method;
+~, $method_name, $dump, $uri, $method;
 
-    return ($sub, $method_name);
+    return ($sub);
 }
 
-sub _get_pod ( $method, $description, $object, $endpoint, $params = '') {
+sub _get_pod ( $method, $description, $object, $endpoint, $params = {}) {
+    my $params_list = '';
+    if ( $params->%* ) {
+        $params_list = "\n" .
+            ( join "\n", map {
+                "        $_ => 'test',"
+            } sort keys $params->%* )
+            . "\n    ";
+    }
+
     my $pod = sprintf q~
 
 =head2 %s
@@ -202,7 +253,7 @@ sub _get_pod ( $method, $description, $object, $endpoint, $params = '') {
 
     $cloud->%s->%s(%s);
 ~,
-        $method, $description, $endpoint, $method, $params;
+        $method, $description, $endpoint, $method, $params_list;
 
     return $pod;
 }
