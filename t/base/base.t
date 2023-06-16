@@ -12,7 +12,7 @@ my $cloud = VM::HetznerCloud->new(
 );
 
 isa_ok $cloud, 'VM::HetznerCloud';
-can_ok $cloud, qw/request token base_uri host client/;
+can_ok $cloud, qw/token base_uri host client/;
 
 my $client = $cloud->client;
 isa_ok $client, 'Mojo::UserAgent';

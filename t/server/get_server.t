@@ -6,11 +6,11 @@ use warnings;
 use Test::More;
 
 use VM::HetznerCloud;
-
-use Data::Printer;
+use t::lib::TestClient;
 
 my $cloud = VM::HetznerCloud->new(
-    token => $ENV{HETZNER_CLOUD_TOKEN} // 'abc123',
+    token  => $ENV{HETZNER_CLOUD_TOKEN} // 'abc123',
+    client => t::lib::TestClient->new,
 );
 
 my $client = $cloud->servers;
@@ -24,7 +24,7 @@ is $client->base_uri, $cloud->base_uri;
 my $server = $client->get( id => "3944327" );
 my $server_list = $client->list();
 
-print np $server;
-print np $server_list;
+is $server->{server}->{name}, 'my-resource';
+is $server_list->{servers}->[0]->{name}, 'my-resource';
 
 done_testing();
