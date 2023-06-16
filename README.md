@@ -45,7 +45,41 @@ my $server_list   = $server_client->list;
 
 # METHODS
 
-## request
+## actions
+
+## certificates
+
+## datacenters
+
+## firewalls
+
+## floating\_ips
+
+## images
+
+## isos
+
+## load\_balancer\_types
+
+## load\_balancers
+
+## locations
+
+## networks
+
+## placement\_groups
+
+## pricing
+
+## primary\_ips
+
+## server\_types
+
+## servers
+
+## ssh\_keys
+
+## volumes
 
 
 
