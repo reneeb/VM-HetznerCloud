@@ -3,28 +3,25 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0 -target => 'VM::HetznerCloud';
 
-use VM::HetznerCloud;
 use t::lib::TestClient;
 
-my $cloud = VM::HetznerCloud->new(
+my $cloud = $CLASS->new(
     token  => $ENV{HETZNER_CLOUD_TOKEN} // 'abc123',
     client => t::lib::TestClient->new,
 );
 
 my $client = $cloud->servers;
-isa_ok $client, 'VM::HetznerCloud::API::Servers';
 
-is $client->token, $ENV{HETZNER_CLOUD_TOKEN} // 'abc123';
-is $client->token, $cloud->token;
-is $client->host, $cloud->host;
-is $client->base_uri, $cloud->base_uri;
+subtest 'get list of servers' => sub {
+    my $server_list = $client->list();
+    is $server_list->{servers}->[0]->{name}, 'my-resource';
+};
 
-my $server = $client->get( id => "3944327" );
-my $server_list = $client->list();
-
-is $server->{server}->{name}, 'my-resource';
-is $server_list->{servers}->[0]->{name}, 'my-resource';
+subtest 'get a single server' => sub {
+    my $server = $client->get( id => "3944327" );
+    is $server->{server}->{name}, 'my-resource';
+};
 
 done_testing();

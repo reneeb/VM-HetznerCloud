@@ -15,6 +15,7 @@ on 'test' => sub {
     requires "File::Path" => "0";
     requires "FindBin" => "0";
     requires "Pod::Coverage::TrustPod" => "0.1";
+    requires "Test2" => "0";
     requires "Test::LongString" => "0.16";
 };
 
