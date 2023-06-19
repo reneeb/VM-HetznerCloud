@@ -45,7 +45,7 @@ sub _load_namespace ($package) {
 
         no strict 'refs';  ## no critic
         *{ $package . '::' . decamelize( $base ) } = sub ($api) {
-            state $object = $module->instance(
+            state $object = $module->new(
                 token    => $api->token,
                 base_uri => $api->base_uri,
                 client   => $api->client,

@@ -15,10 +15,6 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
-with 'MooX::Singleton';
-
-use VM::HetznerCloud::Schema;
-
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'networks' } );

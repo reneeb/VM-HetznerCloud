@@ -193,8 +193,6 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
-with 'MooX::Singleton';
-
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { '%s' } );
