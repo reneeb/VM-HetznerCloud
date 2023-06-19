@@ -4,4 +4,4 @@ exclude  = Subroutines::ProhibitSubroutinePrototypes TestingAndDebugging::Requir
 verbose  = [%p] %m at %f line %l.\n
 
 [Subroutines::ProhibitBuiltinHomonyms]
-allow = delete
+allow = delete reset shutdown
