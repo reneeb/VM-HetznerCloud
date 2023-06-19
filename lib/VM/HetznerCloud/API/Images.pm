@@ -124,7 +124,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -242,11 +242,11 @@ Returns all Action objects for an Image. You can sort the results by using the `
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of the Image. Can only be used on snapshots.
 
-    $cloud->images->create_actions_change_protection(
+    $cloud->images->change_protection(
         id => 'test',
     );
 

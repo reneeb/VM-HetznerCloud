@@ -109,7 +109,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_attach ($self, %params) {
+sub attach ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -121,7 +121,7 @@ sub create_actions_attach ($self, %params) {
     return $self->_request( '/:id/actions/attach', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -133,7 +133,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_detach ($self, %params) {
+sub detach ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -145,7 +145,7 @@ sub create_actions_detach ($self, %params) {
     return $self->_request( '/:id/actions/detach', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_resize ($self, %params) {
+sub resize ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -279,38 +279,38 @@ Returns all Action objects for a Volume. You can `sort` the results by using the
     );
 
 
-=head2 create_actions_attach
+=head2 attach
 
 Attaches a Volume to a Server. Works only if the Server is in the same Location as the Volume.
 
-    $cloud->volumes->create_actions_attach(
+    $cloud->volumes->attach(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of a Volume.
 
-    $cloud->volumes->create_actions_change_protection(
+    $cloud->volumes->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_detach
+=head2 detach
 
 Detaches a Volume from the Server it’s attached to. You may attach it to a Server again at a later time.
 
-    $cloud->volumes->create_actions_detach(
+    $cloud->volumes->detach(
         id => 'test',
     );
 
 
-=head2 create_actions_resize
+=head2 resize
 
 Changes the size of a Volume. Note that downsizing a Volume is not possible.
 
-    $cloud->volumes->create_actions_resize(
+    $cloud->volumes->resize(
         id => 'test',
     );
 

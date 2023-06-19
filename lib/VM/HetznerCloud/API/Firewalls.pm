@@ -104,7 +104,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_apply_to_resources ($self, %params) {
+sub apply_to_resources ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -116,7 +116,7 @@ sub create_actions_apply_to_resources ($self, %params) {
     return $self->_request( '/:id/actions/apply_to_resources', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_remove_from_resources ($self, %params) {
+sub remove_from_resources ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -128,7 +128,7 @@ sub create_actions_remove_from_resources ($self, %params) {
     return $self->_request( '/:id/actions/remove_from_resources', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_set_rules ($self, %params) {
+sub set_rules ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -266,7 +266,7 @@ Returns all Action objects for a Firewall. You can sort the results by using the
     );
 
 
-=head2 create_actions_apply_to_resources
+=head2 apply_to_resources
 
 Applies one Firewall to multiple resources.
 
@@ -281,12 +281,12 @@ Currently servers (public network interface) and label selectors are supported.
 | `firewall_resource_not_found` | The resource the Firewall should be attached to was not found |
 
 
-    $cloud->firewalls->create_actions_apply_to_resources(
+    $cloud->firewalls->apply_to_resources(
         id => 'test',
     );
 
 
-=head2 create_actions_remove_from_resources
+=head2 remove_from_resources
 
 Removes one Firewall from multiple resources.
 
@@ -301,12 +301,12 @@ Currently only Servers (and their public network interfaces) are supported.
 | `firewall_managed_by_label_selector`  | Firewall was applied via label selector and cannot be removed manually |
 
 
-    $cloud->firewalls->create_actions_remove_from_resources(
+    $cloud->firewalls->remove_from_resources(
         id => 'test',
     );
 
 
-=head2 create_actions_set_rules
+=head2 set_rules
 
 Sets the rules of a Firewall.
 
@@ -320,7 +320,7 @@ The maximum amount of rules that can be defined is 50.
 | `firewall_resource_not_found` | The resource the Firewall should be attached to was not found |
 
 
-    $cloud->firewalls->create_actions_set_rules(
+    $cloud->firewalls->set_rules(
         id => 'test',
     );
 

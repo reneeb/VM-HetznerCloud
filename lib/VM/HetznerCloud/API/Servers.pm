@@ -109,7 +109,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_add_to_placement_group ($self, %params) {
+sub add_to_placement_group ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -121,7 +121,7 @@ sub create_actions_add_to_placement_group ($self, %params) {
     return $self->_request( '/:id/actions/add_to_placement_group', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_attach_iso ($self, %params) {
+sub attach_iso ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -133,7 +133,7 @@ sub create_actions_attach_iso ($self, %params) {
     return $self->_request( '/:id/actions/attach_iso', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_attach_to_network ($self, %params) {
+sub attach_to_network ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -145,7 +145,7 @@ sub create_actions_attach_to_network ($self, %params) {
     return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_alias_ips ($self, %params) {
+sub change_alias_ips ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -157,7 +157,7 @@ sub create_actions_change_alias_ips ($self, %params) {
     return $self->_request( '/:id/actions/change_alias_ips', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_dns_ptr ($self, %params) {
+sub change_dns_ptr ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -169,7 +169,7 @@ sub create_actions_change_dns_ptr ($self, %params) {
     return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -181,7 +181,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_type ($self, %params) {
+sub change_type ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -193,7 +193,7 @@ sub create_actions_change_type ($self, %params) {
     return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_create_image ($self, %params) {
+sub create_image ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -205,7 +205,7 @@ sub create_actions_create_image ($self, %params) {
     return $self->_request( '/:id/actions/create_image', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_detach_from_network ($self, %params) {
+sub detach_from_network ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -217,7 +217,7 @@ sub create_actions_detach_from_network ($self, %params) {
     return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_detach_iso ($self, %params) {
+sub detach_iso ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -229,7 +229,7 @@ sub create_actions_detach_iso ($self, %params) {
     return $self->_request( '/:id/actions/detach_iso', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_disable_backup ($self, %params) {
+sub disable_backup ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -241,7 +241,7 @@ sub create_actions_disable_backup ($self, %params) {
     return $self->_request( '/:id/actions/disable_backup', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_disable_rescue ($self, %params) {
+sub disable_rescue ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -253,7 +253,7 @@ sub create_actions_disable_rescue ($self, %params) {
     return $self->_request( '/:id/actions/disable_rescue', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_enable_backup ($self, %params) {
+sub enable_backup ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -265,7 +265,7 @@ sub create_actions_enable_backup ($self, %params) {
     return $self->_request( '/:id/actions/enable_backup', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_enable_rescue ($self, %params) {
+sub enable_rescue ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -277,7 +277,7 @@ sub create_actions_enable_rescue ($self, %params) {
     return $self->_request( '/:id/actions/enable_rescue', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_poweroff ($self, %params) {
+sub poweroff ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -289,7 +289,7 @@ sub create_actions_poweroff ($self, %params) {
     return $self->_request( '/:id/actions/poweroff', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_poweron ($self, %params) {
+sub poweron ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -301,7 +301,7 @@ sub create_actions_poweron ($self, %params) {
     return $self->_request( '/:id/actions/poweron', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_reboot ($self, %params) {
+sub reboot ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -313,7 +313,7 @@ sub create_actions_reboot ($self, %params) {
     return $self->_request( '/:id/actions/reboot', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_rebuild ($self, %params) {
+sub rebuild ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -325,7 +325,7 @@ sub create_actions_rebuild ($self, %params) {
     return $self->_request( '/:id/actions/rebuild', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_remove_from_placement_group ($self, %params) {
+sub remove_from_placement_group ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -337,7 +337,7 @@ sub create_actions_remove_from_placement_group ($self, %params) {
     return $self->_request( '/:id/actions/remove_from_placement_group', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_request_console ($self, %params) {
+sub request_console ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -349,7 +349,7 @@ sub create_actions_request_console ($self, %params) {
     return $self->_request( '/:id/actions/request_console', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_reset ($self, %params) {
+sub reset ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -361,7 +361,7 @@ sub create_actions_reset ($self, %params) {
     return $self->_request( '/:id/actions/reset', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_reset_password ($self, %params) {
+sub reset_password ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -373,7 +373,7 @@ sub create_actions_reset_password ($self, %params) {
     return $self->_request( '/:id/actions/reset_password', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_shutdown ($self, %params) {
+sub shutdown ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -525,7 +525,7 @@ Returns all Action objects for a Server. You can `sort` the results by using the
     );
 
 
-=head2 create_actions_add_to_placement_group
+=head2 add_to_placement_group
 
 Adds a Server to a Placement Group.
 
@@ -538,24 +538,24 @@ Server must be powered off for this command to succeed.
 | `server_not_stopped`          | The action requires a stopped server                                 |
 
 
-    $cloud->servers->create_actions_add_to_placement_group(
+    $cloud->servers->add_to_placement_group(
         id => 'test',
     );
 
 
-=head2 create_actions_attach_iso
+=head2 attach_iso
 
 Attaches an ISO to a Server. The Server will immediately see it as a new disk. An already attached ISO will automatically be detached before the new ISO is attached.
 
 Servers with attached ISOs have a modified boot order: They will try to boot from the ISO first before falling back to hard disk.
 
 
-    $cloud->servers->create_actions_attach_iso(
+    $cloud->servers->attach_iso(
         id => 'test',
     );
 
 
-=head2 create_actions_attach_to_network
+=head2 attach_to_network
 
 Attaches a Server to a network. This will complement the fixed public Server interface by adding an additional ethernet interface to the Server which is connected to the specified network.
 
@@ -573,42 +573,42 @@ Using the `alias_ips` attribute you can also define one or more additional IPs t
 | `networks_overlap`               | The network IP range overlaps with one of the server networks         |
 
 
-    $cloud->servers->create_actions_attach_to_network(
+    $cloud->servers->attach_to_network(
         id => 'test',
     );
 
 
-=head2 create_actions_change_alias_ips
+=head2 change_alias_ips
 
 Changes the alias IPs of an already attached Network. Note that the existing aliases for the specified Network will be replaced with these provided in the request body. So if you want to add an alias IP, you have to provide the existing ones from the Network plus the new alias IP in the request body.
 
-    $cloud->servers->create_actions_change_alias_ips(
+    $cloud->servers->change_alias_ips(
         id => 'test',
     );
 
 
-=head2 create_actions_change_dns_ptr
+=head2 change_dns_ptr
 
 Changes the hostname that will appear when getting the hostname belonging to the primary IPs (IPv4 and IPv6) of this Server.
 
 Floating IPs assigned to the Server are not affected by this.
 
 
-    $cloud->servers->create_actions_change_dns_ptr(
+    $cloud->servers->change_dns_ptr(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of the Server.
 
-    $cloud->servers->create_actions_change_protection(
+    $cloud->servers->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_change_type
+=head2 change_type
 
 Changes the type (Cores, RAM and disk sizes) of a Server.
 
@@ -628,12 +628,12 @@ If the disk gets upgraded, the Server type can not be downgraded any more. If yo
 | `server_not_stopped`          | The action requires a stopped server                                 |
 
 
-    $cloud->servers->create_actions_change_type(
+    $cloud->servers->change_type(
         id => 'test',
     );
 
 
-=head2 create_actions_create_image
+=head2 create_image
 
 Creates an Image (snapshot) from a Server by copying the contents of its disks. This creates a snapshot of the current state of the disk and copies it into an Image. If the Server is currently running you must make sure that its disk content is consistent. Otherwise, the created Image may not be readable.
 
@@ -642,42 +642,42 @@ To make sure disk content is consistent, we recommend to shut down the Server pr
 You can either create a `backup` Image that is bound to the Server and therefore will be deleted when the Server is deleted, or you can create an `snapshot` Image which is completely independent of the Server it was created from and will survive Server deletion. Backup Images are only available when the backup option is enabled for the Server. Snapshot Images are billed on a per GB basis.
 
 
-    $cloud->servers->create_actions_create_image(
+    $cloud->servers->create_image(
         id => 'test',
     );
 
 
-=head2 create_actions_detach_from_network
+=head2 detach_from_network
 
 Detaches a Server from a network. The interface for this network will vanish.
 
-    $cloud->servers->create_actions_detach_from_network(
+    $cloud->servers->detach_from_network(
         id => 'test',
     );
 
 
-=head2 create_actions_detach_iso
+=head2 detach_iso
 
 Detaches an ISO from a Server. In case no ISO Image is attached to the Server, the status of the returned Action is immediately set to `success`
 
-    $cloud->servers->create_actions_detach_iso(
+    $cloud->servers->detach_iso(
         id => 'test',
     );
 
 
-=head2 create_actions_disable_backup
+=head2 disable_backup
 
 Disables the automatic backup option and deletes all existing Backups for a Server. No more additional charges for backups will be made.
 
 Caution: This immediately removes all existing backups for the Server!
 
 
-    $cloud->servers->create_actions_disable_backup(
+    $cloud->servers->disable_backup(
         id => 'test',
     );
 
 
-=head2 create_actions_disable_rescue
+=head2 disable_rescue
 
 Disables the Hetzner Rescue System for a Server. This makes a Server start from its disks on next reboot.
 
@@ -686,24 +686,24 @@ Rescue Mode is automatically disabled when you first boot into it or if you do n
 Disabling rescue mode will not reboot your Server — you will have to do this yourself.
 
 
-    $cloud->servers->create_actions_disable_rescue(
+    $cloud->servers->disable_rescue(
         id => 'test',
     );
 
 
-=head2 create_actions_enable_backup
+=head2 enable_backup
 
 Enables and configures the automatic daily backup option for the Server. Enabling automatic backups will increase the price of the Server by 20%. In return, you will get seven slots where Images of type backup can be stored.
 
 Backups are automatically created daily.
 
 
-    $cloud->servers->create_actions_enable_backup(
+    $cloud->servers->enable_backup(
         id => 'test',
     );
 
 
-=head2 create_actions_enable_rescue
+=head2 enable_rescue
 
 Enable the Hetzner Rescue System for this Server. The next time a Server with enabled rescue mode boots it will start a special minimal Linux distribution designed for repair and reinstall.
 
@@ -714,39 +714,39 @@ Rescue Mode is automatically disabled when you first boot into it or if you do n
 Enabling rescue mode will not [reboot](https://docs.hetzner.cloud/#server-actions-soft-reboot-a-server) your Server — you will have to do this yourself.
 
 
-    $cloud->servers->create_actions_enable_rescue(
+    $cloud->servers->enable_rescue(
         id => 'test',
     );
 
 
-=head2 create_actions_poweroff
+=head2 poweroff
 
 Cuts power to the Server. This forcefully stops it without giving the Server operating system time to gracefully stop. May lead to data loss, equivalent to pulling the power cord. Power off should only be used when shutdown does not work.
 
-    $cloud->servers->create_actions_poweroff(
+    $cloud->servers->poweroff(
         id => 'test',
     );
 
 
-=head2 create_actions_poweron
+=head2 poweron
 
 Starts a Server by turning its power on.
 
-    $cloud->servers->create_actions_poweron(
+    $cloud->servers->poweron(
         id => 'test',
     );
 
 
-=head2 create_actions_reboot
+=head2 reboot
 
 Reboots a Server gracefully by sending an ACPI request. The Server operating system must support ACPI and react to the request, otherwise the Server will not reboot.
 
-    $cloud->servers->create_actions_reboot(
+    $cloud->servers->reboot(
         id => 'test',
     );
 
 
-=head2 create_actions_rebuild
+=head2 rebuild
 
 Rebuilds a Server overwriting its disk with the content of an Image, thereby **destroying all data** on the target Server
 
@@ -755,40 +755,40 @@ The Image can either be one you have created earlier (`backup` or `snapshot` Ima
 Your Server will automatically be powered off before the rebuild command executes.
 
 
-    $cloud->servers->create_actions_rebuild(
+    $cloud->servers->rebuild(
         id => 'test',
     );
 
 
-=head2 create_actions_remove_from_placement_group
+=head2 remove_from_placement_group
 
 Removes a Server from a Placement Group.
 
 
-    $cloud->servers->create_actions_remove_from_placement_group(
+    $cloud->servers->remove_from_placement_group(
         id => 'test',
     );
 
 
-=head2 create_actions_request_console
+=head2 request_console
 
 Requests credentials for remote access via VNC over websocket to keyboard, monitor, and mouse for a Server. The provided URL is valid for 1 minute, after this period a new url needs to be created to connect to the Server. How long the connection is open after the initial connect is not subject to this timeout.
 
-    $cloud->servers->create_actions_request_console(
+    $cloud->servers->request_console(
         id => 'test',
     );
 
 
-=head2 create_actions_reset
+=head2 reset
 
 Cuts power to a Server and starts it again. This forcefully stops it without giving the Server operating system time to gracefully stop. This may lead to data loss, it’s equivalent to pulling the power cord and plugging it in again. Reset should only be used when reboot does not work.
 
-    $cloud->servers->create_actions_reset(
+    $cloud->servers->reset(
         id => 'test',
     );
 
 
-=head2 create_actions_reset_password
+=head2 reset_password
 
 Resets the root password. Only works for Linux systems that are running the qemu guest agent. Server must be powered on (status `running`) in order for this operation to succeed.
 
@@ -797,12 +797,12 @@ This will generate a new password for this Server and return it.
 If this does not succeed you can use the rescue system to netboot the Server and manually change your Server password by hand.
 
 
-    $cloud->servers->create_actions_reset_password(
+    $cloud->servers->reset_password(
         id => 'test',
     );
 
 
-=head2 create_actions_shutdown
+=head2 shutdown
 
 Shuts down a Server gracefully by sending an ACPI shutdown request. The Server operating system must support ACPI
 and react to the request, otherwise the Server will not shut down. Please note that the `action` status in this case
@@ -810,7 +810,7 @@ only reflects whether the action was sent to the server. It does not mean that t
 successfully. If you need to ensure that the server is off, use the `poweroff` action
 
 
-    $cloud->servers->create_actions_shutdown(
+    $cloud->servers->shutdown(
         id => 'test',
     );
 

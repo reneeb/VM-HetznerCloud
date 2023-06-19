@@ -91,9 +91,17 @@ sub _get_subnmame ( $parts, $method ) {
 
     my $suffix = @static_parts ? ( join '_', '', @static_parts ) : '';
 
+    my $special_method;
+    $special_method++ if scalar( $parts->@*) >= 3 && $parts->[-2] eq 'actions' && $parts->[-1] !~ m{\{};
+
     if ( $all ) {
         return 'list' . $suffix   if $method eq 'get';
-        return 'create' . $suffix if $method eq 'post';
+        return 'create' . $suffix if $method eq 'post' && !$special_method;
+
+        if ( $method eq 'post' ) {
+            $suffix =~ s{^_actions_}{};
+            return $suffix;
+        }
     }
 
     return $method . $suffix;
@@ -258,7 +266,10 @@ sub _get_pod ( $method, $description, $object, $endpoint, $params = {}) {
 
 sub _get_schema_package ( $path, $data ) {
     my ($code) = split /__DATA__/, $path->slurp;
+
+    $code =~ s{\n+\z}{};
     $code .= sprintf q!
+
 __DATA__
 @@ paths.json
 %s

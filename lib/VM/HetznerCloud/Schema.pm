@@ -203,8 +203,6 @@ sub _get_params ($operation) {
 
 =cut
 
-
-
 __DATA__
 @@ paths.json
 {

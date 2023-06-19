@@ -87,7 +87,7 @@ sub put ($self, %params) {
     return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
 }
 
-sub create_actions_assign ($self, %params) {
+sub assign ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -99,7 +99,7 @@ sub create_actions_assign ($self, %params) {
     return $self->_request( '/:id/actions/assign', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_dns_ptr ($self, %params) {
+sub change_dns_ptr ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -111,7 +111,7 @@ sub create_actions_change_dns_ptr ($self, %params) {
     return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -123,7 +123,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_unassign ($self, %params) {
+sub unassign ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -234,7 +234,7 @@ If the Primary IP object changes during the request, the response will be a “c
     );
 
 
-=head2 create_actions_assign
+=head2 assign
 
 Assigns a Primary IP to a Server.
 
@@ -252,33 +252,33 @@ The Server must be powered off (status `off`) in order for this operation to suc
 | `server_has_ipv6`             | The server already has an ipv6 address                        |
 
 
-    $cloud->primary_ips->create_actions_assign(
+    $cloud->primary_ips->assign(
         id => 'test',
     );
 
 
-=head2 create_actions_change_dns_ptr
+=head2 change_dns_ptr
 
 Changes the hostname that will appear when getting the hostname belonging to this Primary IP.
 
-    $cloud->primary_ips->create_actions_change_dns_ptr(
+    $cloud->primary_ips->change_dns_ptr(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of a Primary IP.
 
 A Primary IP can only be delete protected if its `auto_delete` property is set to `false`.
 
 
-    $cloud->primary_ips->create_actions_change_protection(
+    $cloud->primary_ips->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_unassign
+=head2 unassign
 
 Unassigns a Primary IP from a Server.
 
@@ -294,7 +294,7 @@ Note that only Servers that have at least one network interface (public or priva
 | `server_is_load_balancer_target`  | The server ipv4 address is a loadbalancer target              |
 
 
-    $cloud->primary_ips->create_actions_unassign(
+    $cloud->primary_ips->unassign(
         id => 'test',
     );
 

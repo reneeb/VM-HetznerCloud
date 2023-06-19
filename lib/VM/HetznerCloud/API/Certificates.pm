@@ -109,7 +109,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_retry ($self, %params) {
+sub retry ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -242,7 +242,7 @@ Only type `managed` Certificates can have Actions. For type `uploaded` Certifica
     );
 
 
-=head2 create_actions_retry
+=head2 retry
 
 Retry a failed Certificate issuance or renewal.
 
@@ -262,7 +262,7 @@ Only applicable if the type of the Certificate is `managed` and the issuance or 
 | `dns_zone_is_secondary_zone`                            | DNS zone is a secondary zone                                              |
 
 
-    $cloud->certificates->create_actions_retry(
+    $cloud->certificates->retry(
         id => 'test',
     );
 

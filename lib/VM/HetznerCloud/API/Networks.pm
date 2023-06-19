@@ -99,7 +99,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_add_route ($self, %params) {
+sub add_route ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -111,7 +111,7 @@ sub create_actions_add_route ($self, %params) {
     return $self->_request( '/:id/actions/add_route', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_add_subnet ($self, %params) {
+sub add_subnet ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -123,7 +123,7 @@ sub create_actions_add_subnet ($self, %params) {
     return $self->_request( '/:id/actions/add_subnet', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_ip_range ($self, %params) {
+sub change_ip_range ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -135,7 +135,7 @@ sub create_actions_change_ip_range ($self, %params) {
     return $self->_request( '/:id/actions/change_ip_range', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -147,7 +147,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_delete_route ($self, %params) {
+sub delete_route ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -159,7 +159,7 @@ sub create_actions_delete_route ($self, %params) {
     return $self->_request( '/:id/actions/delete_route', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_delete_subnet ($self, %params) {
+sub delete_subnet ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -288,31 +288,31 @@ Returns all Action objects for a Network. You can sort the results by using the 
     );
 
 
-=head2 create_actions_add_route
+=head2 add_route
 
 Adds a route entry to a Network.
 
 Note: if the Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_add_route(
+    $cloud->networks->add_route(
         id => 'test',
     );
 
 
-=head2 create_actions_add_subnet
+=head2 add_subnet
 
 Adds a new subnet object to the Network. If you do not specify an `ip_range` for the subnet we will automatically pick the first available /24 range for you if possible.
 
 Note: if the parent Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_add_subnet(
+    $cloud->networks->add_subnet(
         id => 'test',
     );
 
 
-=head2 create_actions_change_ip_range
+=head2 change_ip_range
 
 Changes the IP range of a Network. IP ranges can only be extended and never shrunk. You can only add IPs at the end of an existing IP range. This means that the IP part of your existing range must stay the same and you can only change its netmask.
 
@@ -323,43 +323,43 @@ After changing the IP range you will have to adjust the routes on your connected
 Note: if the Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_change_ip_range(
+    $cloud->networks->change_ip_range(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of a Network.
 
 Note: if the Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_change_protection(
+    $cloud->networks->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_delete_route
+=head2 delete_route
 
 Delete a route entry from a Network.
 
 Note: if the Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_delete_route(
+    $cloud->networks->delete_route(
         id => 'test',
     );
 
 
-=head2 create_actions_delete_subnet
+=head2 delete_subnet
 
 Deletes a single subnet entry from a Network. You cannot delete subnets which still have Servers attached. If you have Servers attached you first need to detach all Servers that use IPs from this subnet before you can delete the subnet.
 
 Note: if the Network object changes during the request, the response will be a “conflict” error.
 
 
-    $cloud->networks->create_actions_delete_subnet(
+    $cloud->networks->delete_subnet(
         id => 'test',
     );
 

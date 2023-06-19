@@ -104,7 +104,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_assign ($self, %params) {
+sub assign ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -116,7 +116,7 @@ sub create_actions_assign ($self, %params) {
     return $self->_request( '/:id/actions/assign', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_dns_ptr ($self, %params) {
+sub change_dns_ptr ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -128,7 +128,7 @@ sub create_actions_change_dns_ptr ($self, %params) {
     return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -140,7 +140,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_unassign ($self, %params) {
+sub unassign ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -258,38 +258,38 @@ Returns all Action objects for a Floating IP. You can sort the results by using 
     );
 
 
-=head2 create_actions_assign
+=head2 assign
 
 Assigns a Floating IP to a Server.
 
-    $cloud->floating_ips->create_actions_assign(
+    $cloud->floating_ips->assign(
         id => 'test',
     );
 
 
-=head2 create_actions_change_dns_ptr
+=head2 change_dns_ptr
 
 Changes the hostname that will appear when getting the hostname belonging to this Floating IP.
 
-    $cloud->floating_ips->create_actions_change_dns_ptr(
+    $cloud->floating_ips->change_dns_ptr(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of the Floating IP.
 
-    $cloud->floating_ips->create_actions_change_protection(
+    $cloud->floating_ips->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_unassign
+=head2 unassign
 
 Unassigns a Floating IP, resulting in it being unreachable. You may assign it to a Server again at a later time.
 
-    $cloud->floating_ips->create_actions_unassign(
+    $cloud->floating_ips->unassign(
         id => 'test',
     );
 

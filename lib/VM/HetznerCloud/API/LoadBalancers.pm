@@ -104,7 +104,7 @@ sub list_actions ($self, %params) {
     return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
 }
 
-sub create_actions_add_service ($self, %params) {
+sub add_service ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -116,7 +116,7 @@ sub create_actions_add_service ($self, %params) {
     return $self->_request( '/:id/actions/add_service', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_add_target ($self, %params) {
+sub add_target ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -128,7 +128,7 @@ sub create_actions_add_target ($self, %params) {
     return $self->_request( '/:id/actions/add_target', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_attach_to_network ($self, %params) {
+sub attach_to_network ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -140,7 +140,7 @@ sub create_actions_attach_to_network ($self, %params) {
     return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_algorithm ($self, %params) {
+sub change_algorithm ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -152,7 +152,7 @@ sub create_actions_change_algorithm ($self, %params) {
     return $self->_request( '/:id/actions/change_algorithm', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_dns_ptr ($self, %params) {
+sub change_dns_ptr ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -164,7 +164,7 @@ sub create_actions_change_dns_ptr ($self, %params) {
     return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_protection ($self, %params) {
+sub change_protection ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -176,7 +176,7 @@ sub create_actions_change_protection ($self, %params) {
     return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_change_type ($self, %params) {
+sub change_type ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -188,7 +188,7 @@ sub create_actions_change_type ($self, %params) {
     return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_delete_service ($self, %params) {
+sub delete_service ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -200,7 +200,7 @@ sub create_actions_delete_service ($self, %params) {
     return $self->_request( '/:id/actions/delete_service', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_detach_from_network ($self, %params) {
+sub detach_from_network ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -212,7 +212,7 @@ sub create_actions_detach_from_network ($self, %params) {
     return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_disable_public_interface ($self, %params) {
+sub disable_public_interface ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -224,7 +224,7 @@ sub create_actions_disable_public_interface ($self, %params) {
     return $self->_request( '/:id/actions/disable_public_interface', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_enable_public_interface ($self, %params) {
+sub enable_public_interface ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -236,7 +236,7 @@ sub create_actions_enable_public_interface ($self, %params) {
     return $self->_request( '/:id/actions/enable_public_interface', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_remove_target ($self, %params) {
+sub remove_target ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -248,7 +248,7 @@ sub create_actions_remove_target ($self, %params) {
     return $self->_request( '/:id/actions/remove_target', \%params, $request_params, { type => 'post' } );
 }
 
-sub create_actions_update_service ($self, %params) {
+sub update_service ($self, %params) {
     my $request_params = {
         'id' => {
             'in'       => 'path',
@@ -415,7 +415,7 @@ Returns all Action objects for a Load Balancer. You can sort the results by usin
     );
 
 
-=head2 create_actions_add_service
+=head2 add_service
 
 Adds a service to a Load Balancer.
 
@@ -426,12 +426,12 @@ Adds a service to a Load Balancer.
 | `source_port_already_used` | The source port you are trying to add is already in use |
 
 
-    $cloud->load_balancers->create_actions_add_service(
+    $cloud->load_balancers->add_service(
         id => 'test',
     );
 
 
-=head2 create_actions_add_target
+=head2 add_target
 
 Adds a target to a Load Balancer.
 
@@ -447,12 +447,12 @@ Adds a target to a Load Balancer.
 | `target_already_defined`                | The Load Balancer target you are trying to define is already defined                                  |
 
 
-    $cloud->load_balancers->create_actions_add_target(
+    $cloud->load_balancers->add_target(
         id => 'test',
     );
 
 
-=head2 create_actions_attach_to_network
+=head2 attach_to_network
 
 Attach a Load Balancer to a Network.
 
@@ -465,42 +465,42 @@ Attach a Load Balancer to a Network.
 | `no_subnet_available`            | No Subnet or IP is available for the Load Balancer within the network |
 
 
-    $cloud->load_balancers->create_actions_attach_to_network(
+    $cloud->load_balancers->attach_to_network(
         id => 'test',
     );
 
 
-=head2 create_actions_change_algorithm
+=head2 change_algorithm
 
 Change the algorithm that determines to which target new requests are sent.
 
-    $cloud->load_balancers->create_actions_change_algorithm(
+    $cloud->load_balancers->change_algorithm(
         id => 'test',
     );
 
 
-=head2 create_actions_change_dns_ptr
+=head2 change_dns_ptr
 
 Changes the hostname that will appear when getting the hostname belonging to the public IPs (IPv4 and IPv6) of this Load Balancer.
 
 Floating IPs assigned to the Server are not affected by this.
 
 
-    $cloud->load_balancers->create_actions_change_dns_ptr(
+    $cloud->load_balancers->change_dns_ptr(
         id => 'test',
     );
 
 
-=head2 create_actions_change_protection
+=head2 change_protection
 
 Changes the protection configuration of a Load Balancer.
 
-    $cloud->load_balancers->create_actions_change_protection(
+    $cloud->load_balancers->change_protection(
         id => 'test',
     );
 
 
-=head2 create_actions_change_type
+=head2 change_type
 
 Changes the type (Max Services, Max Targets and Max Connections) of a Load Balancer.
 
@@ -511,30 +511,30 @@ Changes the type (Max Services, Max Targets and Max Connections) of a Load Balan
 | `invalid_load_balancer_type` | The Load Balancer type does not fit for the given Load Balancer |
 
 
-    $cloud->load_balancers->create_actions_change_type(
+    $cloud->load_balancers->change_type(
         id => 'test',
     );
 
 
-=head2 create_actions_delete_service
+=head2 delete_service
 
 Delete a service of a Load Balancer.
 
-    $cloud->load_balancers->create_actions_delete_service(
+    $cloud->load_balancers->delete_service(
         id => 'test',
     );
 
 
-=head2 create_actions_detach_from_network
+=head2 detach_from_network
 
 Detaches a Load Balancer from a network.
 
-    $cloud->load_balancers->create_actions_detach_from_network(
+    $cloud->load_balancers->detach_from_network(
         id => 'test',
     );
 
 
-=head2 create_actions_disable_public_interface
+=head2 disable_public_interface
 
 Disable the public interface of a Load Balancer. The Load Balancer will be not accessible from the internet via its public IPs.
 
@@ -546,30 +546,30 @@ Disable the public interface of a Load Balancer. The Load Balancer will be not a
 | `targets_without_use_private_ip`          | The Load Balancer has targets that use the public IP instead of the private IP |
 
 
-    $cloud->load_balancers->create_actions_disable_public_interface(
+    $cloud->load_balancers->disable_public_interface(
         id => 'test',
     );
 
 
-=head2 create_actions_enable_public_interface
+=head2 enable_public_interface
 
 Enable the public interface of a Load Balancer. The Load Balancer will be accessible from the internet via its public IPs.
 
-    $cloud->load_balancers->create_actions_enable_public_interface(
+    $cloud->load_balancers->enable_public_interface(
         id => 'test',
     );
 
 
-=head2 create_actions_remove_target
+=head2 remove_target
 
 Removes a target from a Load Balancer.
 
-    $cloud->load_balancers->create_actions_remove_target(
+    $cloud->load_balancers->remove_target(
         id => 'test',
     );
 
 
-=head2 create_actions_update_service
+=head2 update_service
 
 Updates a Load Balancer Service.
 
@@ -580,7 +580,7 @@ Updates a Load Balancer Service.
 | `source_port_already_used` | The source port you are trying to add is already in use |
 
 
-    $cloud->load_balancers->create_actions_update_service(
+    $cloud->load_balancers->update_service(
         id => 'test',
     );
 
