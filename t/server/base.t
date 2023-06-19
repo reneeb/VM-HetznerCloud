@@ -15,12 +15,12 @@ subtest 'can all required methods' => sub {
     my @methods = qw(
         list create
         get delete put
-        list_actions actions_add_to_placement_group actions_attach_iso actions_attach_to_network
-        actions_change_alias_ips actions_change_dns_ptr actions_change_protection actions_change_type
-        actions_create_image actions_detach_from_network actions_detach_iso actions_disable_backup
-        actions_disable_rescue actions_enable_backup actions_enable_rescue actions_poweroff
-        actions_poweron actions_reboot actions_rebuild actions_remove_from_placement_group
-        actions_request_console actions_reset actions_reset_password actions_shutdown
+        list_actions add_to_placement_group attach_iso attach_to_network
+        change_alias_ips change_dns_ptr change_protection change_type
+        create_image detach_from_network detach_iso disable_backup
+        disable_rescue enable_backup enable_rescue poweroff
+        poweron reboot rebuild remove_from_placement_group
+        request_console reset reset_password shutdown
         get_actions
         list_metrics
     );
