@@ -57,9 +57,10 @@ for my $api_path ( @paths ) {
     my $name  = shift $parts->@*;
     my $class = camelize $name;
 
-    my $subtree = $api_json->{$api_path};
-    $subtree->{path} = $api_path;
+    my $subtree       = $api_json->{$api_path};
+    $subtree->{path}  = $api_path;
     $subtree->{parts} = $parts;
+    $subtree->{name}  = $name;
 
     $classes{$class} //= {
         endpoint => $name,
@@ -93,6 +94,9 @@ sub _get_subnmame ( $parts, $method ) {
 
     my $special_method;
     $special_method++ if scalar( $parts->@*) >= 3 && $parts->[-2] eq 'actions' && $parts->[-1] !~ m{\{};
+
+    $method =~ s{[^a-z_]}{}g;
+    $suffix =~ s{[^a-z_]}{}g;
 
     if ( $all ) {
         return 'list' . $suffix   if $method eq 'get';
@@ -129,6 +133,13 @@ sub _get_subparams ( $def ) {
     return \%subparams;
 }
 
+sub _get_operation_id ( $def, $method ) {
+    my $path = join '/', ( '', $def->{name}, $def->{parts}->@* );
+    my $oid  = join '#', $path, $method;
+
+    return $oid;
+}
+
 sub _get_code ($class, $definitions) {
     my $endpoint    = $definitions->{endpoint};
     my $subs        = '';
@@ -146,11 +157,12 @@ sub _get_code ($class, $definitions) {
 
             my $subname   = _get_subnmame( $subdef->{parts}, $method );
             my $subparams = _get_subparams( $method_def );
+            my $operation = _get_operation_id( $subdef, $method );
 
             delete @{ $method_def }{qw/responses x-code-samples summary tags/};
         
             my $description = delete $method_def->{description};
-            my $sub = _get_sub( $subname, $method, $endpoint, $uri, $subparams );
+            my $sub = _get_sub( $subname, $method, $endpoint, $uri, $subparams, $operation );
             my $pod = _get_pod( $subname, $description, $class, $endpoint, $subparams );
 
             $subs        .= $sub;
@@ -201,6 +213,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { '%s' } );
@@ -219,10 +233,10 @@ __END__
     return $code;
 }
 
-sub _get_sub ( $method_name, $method, $class, $uri, $params ) {
+sub _get_sub ( $method_name, $method, $class, $uri, $params, $oid ) {
     $class =~ s{s\z}{};
 
-    my $dump = '{}';
+    my $dump = '{};';
     if ( $params->%* ) {
         $dump = Data::Dumper::Perltidy::Dumper( $params );
         $dump =~ s{^}{    }xmsg;
@@ -233,12 +247,12 @@ sub _get_sub ( $method_name, $method, $class, $uri, $params ) {
 
     my $sub = sprintf q~
 sub %s ($self, %%params) {
-    my $request_params = %s;
-    return $self->_request( '%s', \%%params, $request_params, { type => '%s' } );
+    my $request_params = %s
+    return $self->_request( '%s', \%%params, $request_params, { type => '%s', oid => '%s' } );
 }
-~, $method_name, $dump, $uri, $method;
+~, $method_name, $dump, $uri, $method, $oid;
 
-    return ($sub);
+    return encode_utf8($sub);
 }
 
 sub _get_pod ( $method, $description, $object, $endpoint, $params = {}) {
@@ -261,7 +275,7 @@ sub _get_pod ( $method, $description, $object, $endpoint, $params = {}) {
 ~,
         $method, $description, $endpoint, $method, $params_list;
 
-    return $pod;
+    return encode_utf8( $pod );
 }
 
 sub _get_schema_package ( $path, $data ) {
@@ -271,7 +285,7 @@ sub _get_schema_package ( $path, $data ) {
     $code .= sprintf q!
 
 __DATA__
-@@ paths.json
+@@ openapi.json
 %s
 !, JSON::XS->new->canonical(1)->utf8(1)->pretty(1)->encode( $data );
 
