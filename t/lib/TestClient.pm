@@ -18,13 +18,21 @@ sub start ( $self, $tx, $cb ) {
     $url =~ s{\Q$base_uri\E}{};
 
     my %responses = (
-        'servers//3944327' => {
+        'servers/3944327' => {
             code => 200,
             file => [qw/data servers_get.txt/],
         },
-        'servers/' => {
+        'servers' => {
             code => 200,
             file => [qw/data servers_list.txt/],
+        },
+        'servers?status=running' => {
+            code => 200,
+            file => [qw/data servers_list.txt/],
+        },
+        'servers?status=shutdown' => {
+            code => 200,
+            file => [qw/data servers_empty_list.txt/],
         },
     );
 
@@ -35,6 +43,7 @@ sub start ( $self, $tx, $cb ) {
     else {
         my $data         = $responses{$url};
         my $content_file = curfile->dirname->child( '..', $data->{file}->@* );
+
         my $content;
         $content = $content_file->slurp if -f $content_file->to_string;
 

@@ -33,7 +33,7 @@ subtest 'check attribute values' => sub {
         token => $ENV{HETZNER_CLOUD_TOKEN} // 'abc135',
     );
 
-    is $client->token, $ENV{HETZNER_CLOUD_TOKEN} // 'abc123';
+    is $client->token, $ENV{HETZNER_CLOUD_TOKEN} // 'abc135';
 };
 
 
