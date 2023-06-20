@@ -1,6 +1,6 @@
 [![Kwalitee status](https://cpants.cpanauthors.org/dist/VM-HetznerCloud.png)](https://cpants.cpanauthors.org/dist/VM-HetznerCloud)
 [![GitHub issues](https://img.shields.io/github/issues/reneeb/VM-HetznerCloud.svg)](https://github.com/reneeb/VM-HetznerCloud/issues)
-[![CPAN Cover Status](https://cpancoverbadge.perl-services.de/VM-HetznerCloud-0.0.2)](https://cpancoverbadge.perl-services.de/VM-HetznerCloud-0.0.2)
+[![CPAN Cover Status](https://cpancoverbadge.perl-services.de/VM-HetznerCloud-0.0.3)](https://cpancoverbadge.perl-services.de/VM-HetznerCloud-0.0.3)
 [![Cpan license](https://img.shields.io/cpan/l/VM-HetznerCloud.svg)](https://metacpan.org/release/VM-HetznerCloud)
 
 # NAME
@@ -9,7 +9,7 @@ VM::HetznerCloud - Perl library to work with the API for the Hetzner Cloud
 
 # VERSION
 
-version 0.0.2
+version 0.0.3
 
 # SYNOPSIS
 
