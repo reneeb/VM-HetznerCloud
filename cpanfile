@@ -10,12 +10,8 @@ requires "URI::Escape" => "5.10";
 requires "perl" => "5.020";
 
 on 'test' => sub {
-    requires "File::Copy" => "0";
-    requires "File::Path" => "0";
-    requires "FindBin" => "0";
     requires "Pod::Coverage::TrustPod" => "0.1";
     requires "Test2::V0" => "0";
-    requires "Test::LongString" => "0.16";
 };
 
 on 'configure' => sub {
