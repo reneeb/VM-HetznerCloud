@@ -15,13 +15,15 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'pricing' } );
 
 sub list ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/pricing#get' } );
 }
 
 

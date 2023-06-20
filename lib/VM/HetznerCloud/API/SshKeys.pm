@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'ssh_keys' } );
@@ -42,13 +44,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/ssh_keys#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/ssh_keys#post' } );
 }
 
 sub delete ($self, %params) {
@@ -59,8 +61,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/ssh_keys/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -71,8 +73,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/ssh_keys/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -83,8 +85,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/ssh_keys/{id}#put' } );
 }
 
 

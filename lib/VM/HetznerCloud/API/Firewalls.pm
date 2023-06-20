@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'firewalls' } );
@@ -37,13 +39,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/firewalls#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/firewalls#post' } );
 }
 
 sub delete ($self, %params) {
@@ -54,8 +56,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/firewalls/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -66,8 +68,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/firewalls/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -78,8 +80,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/firewalls/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -100,8 +102,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/firewalls/{id}/actions#get' } );
 }
 
 sub apply_to_resources ($self, %params) {
@@ -112,8 +114,8 @@ sub apply_to_resources ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/apply_to_resources', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/apply_to_resources', \%params, $request_params, { type => 'post', oid => '/firewalls/{id}/actions/apply_to_resources#post' } );
 }
 
 sub remove_from_resources ($self, %params) {
@@ -124,8 +126,8 @@ sub remove_from_resources ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/remove_from_resources', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/remove_from_resources', \%params, $request_params, { type => 'post', oid => '/firewalls/{id}/actions/remove_from_resources#post' } );
 }
 
 sub set_rules ($self, %params) {
@@ -136,8 +138,8 @@ sub set_rules ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/set_rules', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/set_rules', \%params, $request_params, { type => 'post', oid => '/firewalls/{id}/actions/set_rules#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -153,8 +155,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/firewalls/{id}/actions/{action_id}#get' } );
 }
 
 

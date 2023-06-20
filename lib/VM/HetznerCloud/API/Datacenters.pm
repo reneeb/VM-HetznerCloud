@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'datacenters' } );
@@ -27,8 +29,8 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/datacenters#get' } );
 }
 
 sub get ($self, %params) {
@@ -39,8 +41,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/datacenters/{id}#get' } );
 }
 
 

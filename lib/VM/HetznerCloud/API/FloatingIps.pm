@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'floating_ips' } );
@@ -37,13 +39,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/floating_ips#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/floating_ips#post' } );
 }
 
 sub delete ($self, %params) {
@@ -54,8 +56,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/floating_ips/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -66,8 +68,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/floating_ips/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -78,8 +80,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/floating_ips/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -100,8 +102,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/floating_ips/{id}/actions#get' } );
 }
 
 sub assign ($self, %params) {
@@ -112,8 +114,8 @@ sub assign ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/assign', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/assign', \%params, $request_params, { type => 'post', oid => '/floating_ips/{id}/actions/assign#post' } );
 }
 
 sub change_dns_ptr ($self, %params) {
@@ -124,8 +126,8 @@ sub change_dns_ptr ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post', oid => '/floating_ips/{id}/actions/change_dns_ptr#post' } );
 }
 
 sub change_protection ($self, %params) {
@@ -136,8 +138,8 @@ sub change_protection ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post', oid => '/floating_ips/{id}/actions/change_protection#post' } );
 }
 
 sub unassign ($self, %params) {
@@ -148,8 +150,8 @@ sub unassign ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/unassign', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/unassign', \%params, $request_params, { type => 'post', oid => '/floating_ips/{id}/actions/unassign#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -165,8 +167,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/floating_ips/{id}/actions/{action_id}#get' } );
 }
 
 

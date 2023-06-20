@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'networks' } );
@@ -32,13 +34,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/networks#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/networks#post' } );
 }
 
 sub delete ($self, %params) {
@@ -49,8 +51,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/networks/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -61,8 +63,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/networks/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -73,8 +75,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/networks/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -95,8 +97,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/networks/{id}/actions#get' } );
 }
 
 sub add_route ($self, %params) {
@@ -107,8 +109,8 @@ sub add_route ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/add_route', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/add_route', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/add_route#post' } );
 }
 
 sub add_subnet ($self, %params) {
@@ -119,8 +121,8 @@ sub add_subnet ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/add_subnet', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/add_subnet', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/add_subnet#post' } );
 }
 
 sub change_ip_range ($self, %params) {
@@ -131,8 +133,8 @@ sub change_ip_range ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_ip_range', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_ip_range', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/change_ip_range#post' } );
 }
 
 sub change_protection ($self, %params) {
@@ -143,8 +145,8 @@ sub change_protection ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/change_protection#post' } );
 }
 
 sub delete_route ($self, %params) {
@@ -155,8 +157,8 @@ sub delete_route ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/delete_route', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/delete_route', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/delete_route#post' } );
 }
 
 sub delete_subnet ($self, %params) {
@@ -167,8 +169,8 @@ sub delete_subnet ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/delete_subnet', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/delete_subnet', \%params, $request_params, { type => 'post', oid => '/networks/{id}/actions/delete_subnet#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -184,8 +186,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/networks/{id}/actions/{action_id}#get' } );
 }
 
 

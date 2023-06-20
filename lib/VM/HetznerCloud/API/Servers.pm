@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'servers' } );
@@ -42,13 +44,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/servers#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/servers#post' } );
 }
 
 sub delete ($self, %params) {
@@ -59,8 +61,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/servers/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -71,8 +73,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/servers/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -83,8 +85,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/servers/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -105,8 +107,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/servers/{id}/actions#get' } );
 }
 
 sub add_to_placement_group ($self, %params) {
@@ -117,8 +119,8 @@ sub add_to_placement_group ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/add_to_placement_group', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/add_to_placement_group', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/add_to_placement_group#post' } );
 }
 
 sub attach_iso ($self, %params) {
@@ -129,8 +131,8 @@ sub attach_iso ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/attach_iso', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/attach_iso', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/attach_iso#post' } );
 }
 
 sub attach_to_network ($self, %params) {
@@ -141,8 +143,8 @@ sub attach_to_network ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/attach_to_network#post' } );
 }
 
 sub change_alias_ips ($self, %params) {
@@ -153,8 +155,8 @@ sub change_alias_ips ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_alias_ips', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_alias_ips', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/change_alias_ips#post' } );
 }
 
 sub change_dns_ptr ($self, %params) {
@@ -165,8 +167,8 @@ sub change_dns_ptr ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/change_dns_ptr#post' } );
 }
 
 sub change_protection ($self, %params) {
@@ -177,8 +179,8 @@ sub change_protection ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/change_protection#post' } );
 }
 
 sub change_type ($self, %params) {
@@ -189,8 +191,8 @@ sub change_type ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/change_type#post' } );
 }
 
 sub create_image ($self, %params) {
@@ -201,8 +203,8 @@ sub create_image ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/create_image', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/create_image', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/create_image#post' } );
 }
 
 sub detach_from_network ($self, %params) {
@@ -213,8 +215,8 @@ sub detach_from_network ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/detach_from_network#post' } );
 }
 
 sub detach_iso ($self, %params) {
@@ -225,8 +227,8 @@ sub detach_iso ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/detach_iso', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/detach_iso', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/detach_iso#post' } );
 }
 
 sub disable_backup ($self, %params) {
@@ -237,8 +239,8 @@ sub disable_backup ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/disable_backup', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/disable_backup', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/disable_backup#post' } );
 }
 
 sub disable_rescue ($self, %params) {
@@ -249,8 +251,8 @@ sub disable_rescue ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/disable_rescue', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/disable_rescue', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/disable_rescue#post' } );
 }
 
 sub enable_backup ($self, %params) {
@@ -261,8 +263,8 @@ sub enable_backup ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/enable_backup', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/enable_backup', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/enable_backup#post' } );
 }
 
 sub enable_rescue ($self, %params) {
@@ -273,8 +275,8 @@ sub enable_rescue ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/enable_rescue', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/enable_rescue', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/enable_rescue#post' } );
 }
 
 sub poweroff ($self, %params) {
@@ -285,8 +287,8 @@ sub poweroff ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/poweroff', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/poweroff', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/poweroff#post' } );
 }
 
 sub poweron ($self, %params) {
@@ -297,8 +299,8 @@ sub poweron ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/poweron', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/poweron', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/poweron#post' } );
 }
 
 sub reboot ($self, %params) {
@@ -309,8 +311,8 @@ sub reboot ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/reboot', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/reboot', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/reboot#post' } );
 }
 
 sub rebuild ($self, %params) {
@@ -321,8 +323,8 @@ sub rebuild ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/rebuild', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/rebuild', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/rebuild#post' } );
 }
 
 sub remove_from_placement_group ($self, %params) {
@@ -333,8 +335,8 @@ sub remove_from_placement_group ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/remove_from_placement_group', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/remove_from_placement_group', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/remove_from_placement_group#post' } );
 }
 
 sub request_console ($self, %params) {
@@ -345,8 +347,8 @@ sub request_console ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/request_console', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/request_console', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/request_console#post' } );
 }
 
 sub reset ($self, %params) {
@@ -357,8 +359,8 @@ sub reset ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/reset', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/reset', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/reset#post' } );
 }
 
 sub reset_password ($self, %params) {
@@ -369,8 +371,8 @@ sub reset_password ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/reset_password', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/reset_password', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/reset_password#post' } );
 }
 
 sub shutdown ($self, %params) {
@@ -381,8 +383,8 @@ sub shutdown ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/shutdown', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/shutdown', \%params, $request_params, { type => 'post', oid => '/servers/{id}/actions/shutdown#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -398,8 +400,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/servers/{id}/actions/{action_id}#get' } );
 }
 
 sub list_metrics ($self, %params) {
@@ -430,8 +432,8 @@ sub list_metrics ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/metrics', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/metrics', \%params, $request_params, { type => 'get', oid => '/servers/{id}/metrics#get' } );
 }
 
 

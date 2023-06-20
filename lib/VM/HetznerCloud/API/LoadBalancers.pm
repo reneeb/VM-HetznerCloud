@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'load_balancers' } );
@@ -37,13 +39,13 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/load_balancers#get' } );
 }
 
 sub create ($self, %params) {
     my $request_params = {};
-    return $self->_request( '', \%params, $request_params, { type => 'post' } );
+    return $self->_request( '', \%params, $request_params, { type => 'post', oid => '/load_balancers#post' } );
 }
 
 sub delete ($self, %params) {
@@ -54,8 +56,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/load_balancers/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -66,8 +68,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/load_balancers/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -78,8 +80,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/load_balancers/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -100,8 +102,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/load_balancers/{id}/actions#get' } );
 }
 
 sub add_service ($self, %params) {
@@ -112,8 +114,8 @@ sub add_service ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/add_service', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/add_service', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/add_service#post' } );
 }
 
 sub add_target ($self, %params) {
@@ -124,8 +126,8 @@ sub add_target ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/add_target', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/add_target', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/add_target#post' } );
 }
 
 sub attach_to_network ($self, %params) {
@@ -136,8 +138,8 @@ sub attach_to_network ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/attach_to_network', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/attach_to_network#post' } );
 }
 
 sub change_algorithm ($self, %params) {
@@ -148,8 +150,8 @@ sub change_algorithm ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_algorithm', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_algorithm', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/change_algorithm#post' } );
 }
 
 sub change_dns_ptr ($self, %params) {
@@ -160,8 +162,8 @@ sub change_dns_ptr ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_dns_ptr', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/change_dns_ptr#post' } );
 }
 
 sub change_protection ($self, %params) {
@@ -172,8 +174,8 @@ sub change_protection ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/change_protection#post' } );
 }
 
 sub change_type ($self, %params) {
@@ -184,8 +186,8 @@ sub change_type ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_type', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/change_type#post' } );
 }
 
 sub delete_service ($self, %params) {
@@ -196,8 +198,8 @@ sub delete_service ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/delete_service', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/delete_service', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/delete_service#post' } );
 }
 
 sub detach_from_network ($self, %params) {
@@ -208,8 +210,8 @@ sub detach_from_network ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/detach_from_network', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/detach_from_network#post' } );
 }
 
 sub disable_public_interface ($self, %params) {
@@ -220,8 +222,8 @@ sub disable_public_interface ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/disable_public_interface', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/disable_public_interface', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/disable_public_interface#post' } );
 }
 
 sub enable_public_interface ($self, %params) {
@@ -232,8 +234,8 @@ sub enable_public_interface ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/enable_public_interface', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/enable_public_interface', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/enable_public_interface#post' } );
 }
 
 sub remove_target ($self, %params) {
@@ -244,8 +246,8 @@ sub remove_target ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/remove_target', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/remove_target', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/remove_target#post' } );
 }
 
 sub update_service ($self, %params) {
@@ -256,8 +258,8 @@ sub update_service ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/update_service', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/update_service', \%params, $request_params, { type => 'post', oid => '/load_balancers/{id}/actions/update_service#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -273,8 +275,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/load_balancers/{id}/actions/{action_id}#get' } );
 }
 
 sub list_metrics ($self, %params) {
@@ -305,8 +307,8 @@ sub list_metrics ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/metrics', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/metrics', \%params, $request_params, { type => 'get', oid => '/load_balancers/{id}/metrics#get' } );
 }
 
 

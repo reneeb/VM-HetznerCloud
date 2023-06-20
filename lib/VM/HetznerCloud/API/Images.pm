@@ -15,6 +15,8 @@ use Mojo::Base -strict, -signatures;
 
 extends 'VM::HetznerCloud::APIBase';
 
+use utf8;
+
 # VERSION
 
 has endpoint  => ( is => 'ro', isa => Str, default => sub { 'images' } );
@@ -62,8 +64,8 @@ sub list ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '', \%params, $request_params, { type => 'get', oid => '/images#get' } );
 }
 
 sub delete ($self, %params) {
@@ -74,8 +76,8 @@ sub delete ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'delete' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'delete', oid => '/images/{id}#delete' } );
 }
 
 sub get ($self, %params) {
@@ -86,8 +88,8 @@ sub get ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'get', oid => '/images/{id}#get' } );
 }
 
 sub put ($self, %params) {
@@ -98,8 +100,8 @@ sub put ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id', \%params, $request_params, { type => 'put' } );
+
+    return $self->_request( '/:id', \%params, $request_params, { type => 'put', oid => '/images/{id}#put' } );
 }
 
 sub list_actions ($self, %params) {
@@ -120,8 +122,8 @@ sub list_actions ($self, %params) {
             'validate' => 'string',
         },
     };
-;
-    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions', \%params, $request_params, { type => 'get', oid => '/images/{id}/actions#get' } );
 }
 
 sub change_protection ($self, %params) {
@@ -132,8 +134,8 @@ sub change_protection ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post' } );
+
+    return $self->_request( '/:id/actions/change_protection', \%params, $request_params, { type => 'post', oid => '/images/{id}/actions/change_protection#post' } );
 }
 
 sub get_actions ($self, %params) {
@@ -149,8 +151,8 @@ sub get_actions ($self, %params) {
             'validate' => 'int64',
         },
     };
-;
-    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get' } );
+
+    return $self->_request( '/:id/actions/:action_id', \%params, $request_params, { type => 'get', oid => '/images/{id}/actions/{action_id}#get' } );
 }
 
 
