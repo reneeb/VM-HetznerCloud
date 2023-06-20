@@ -6,12 +6,15 @@ use v5.24;
 
 use Mojo::Base -strict, -signatures;
 
+use Encode;
 use JSON::Validator;
 use JSON::Validator::Formats;
 use List::Util qw(uniq);
 use Mojo::JSON qw(decode_json);
 use Mojo::Loader qw(data_section);
 use Mojo::Util qw(camelize);
+
+use utf8;
 
 use constant IV_SIZE => eval 'require Config;$Config::Config{ivsize}'; ## no critic
 
@@ -71,29 +74,14 @@ sub _get_params ($operation) {
     return $op_data->@* if $op_data;
 
     my $api_spec = data_section(__PACKAGE__, 'openapi.json');
-    $api_spec    =~ s{/components/schemas}{}g;
+    $api_spec    = encode_utf8( $api_spec );
 
     my $data    = decode_json( $api_spec );
-    my $schemas = $data->{components}->{schemas};
 
-    my %paths = $data->{paths}->%*;
+    my ($path, $method) = split '#', $operation // '1#1';
+    my $op              = $data->{$path}->{$method};
 
-    my $op;
-
-    for my $path ( keys %paths ) {
-
-        METHOD:
-        for my $method_name ( keys $paths{$path}->%* ) {
-            next METHOD if 'HASH' ne ref $paths{$path}->{$method_name};
-
-            my $method = $paths{$path}->{$method_name};
-            if ( $method->{operationId} && $method->{operationId} eq $operation ) {
-                $op = $method;
-            }
-        }
-    }
-
-    return {} if !$op;
+    return if !$op;
 
     my $params = $op->{parameters};
 
@@ -129,10 +117,6 @@ sub _get_params ($operation) {
                $properties{$property}  = delete $prop->{$property};
                $param_names{$property} = 'body';
            }
-
-           if ( $schema->{'$ref'} ) {  # '$ref' is not a typo. The key is named '$ref'!
-               $properties{'$ref'} = $schema->{'$ref'};
-           }
        }
        elsif ( $content_type eq 'text/plain' ) {
            $properties{text}  = { type => "string" };
@@ -147,7 +131,6 @@ sub _get_params ($operation) {
         properties    => \%properties,
         param_names   => \%param_names,
         content_type  => $content_type,
-        $schemas->%*,
     };
 
     my $validator = JSON::Validator->new->schema($spec);
@@ -204,7 +187,7 @@ sub _get_params ($operation) {
 =cut
 
 __DATA__
-@@ paths.json
+@@ openapi.json
 {
    "/actions" : {
       "get" : {
